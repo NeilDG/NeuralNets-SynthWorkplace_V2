@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
-[ExecuteAlways]
 public class ImageBoxRenderer : MonoBehaviour
 {
     [SerializeField] private MeshRenderer baseRenderer;
@@ -10,7 +10,12 @@ public class ImageBoxRenderer : MonoBehaviour
     private const float MIN_SCALE_Y = 10.0f;
     private const float MAX_SCALE_Y = 50.0f;
 
+    private const float MIN_INTERVAL = 2.0f;
+    private const float MAX_INTERVAL = 3.0f;
+    private float ticks = 0.0f;
+
     // Start is called before the first frame update
+    [ExecuteAlways]
     void Start()
     {
         this.RandomizeScale();
@@ -20,7 +25,13 @@ public class ImageBoxRenderer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        this.ticks += Time.deltaTime;
+        if (this.ticks > Random.Range(MIN_INTERVAL, MAX_INTERVAL))
+        {
+            this.ticks = 0.0f;
+            this.RandomizeScale();
+            this.RandomizeMaterial();
+        }
     }
 
     private void RandomizeScale()
@@ -39,15 +50,15 @@ public class ImageBoxRenderer : MonoBehaviour
     private void RandomizeMaterial()
     {
         Color baseColor = this.baseRenderer.material.color;
-        Texture mainTexture = this.baseRenderer.material.mainTexture;
-
-        baseColor.r = Random.Range(0.0f, 1.0f);
-        baseColor.g = Random.Range(0.0f, 1.0f);
-        baseColor.b = Random.Range(0.0f, 1.0f);
-
+        baseColor.r = Random.Range(1.0f, 1.0f);
+        baseColor.g = Random.Range(1.0f, 1.0f);
+        baseColor.b = Random.Range(1.0f, 1.0f);
         this.baseRenderer.material.color = baseColor;
 
-        this.baseRenderer.material.SetFloat("_Metallic", Random.Range(0.0f, 1.0f));
-        this.baseRenderer.material.SetFloat("_Glossiness", Random.Range(0.0f, 1.0f));
+        this.baseRenderer.material.SetFloat("_Metallic", Random.Range(0.0f, 0.0f));
+        this.baseRenderer.material.SetFloat("_Glossiness", Random.Range(0.0f, 0.0f));
+
+        this.baseRenderer.material.mainTexture = DatasetLoader.GetInstance().GetRandomImage();
+
     }
 }
