@@ -39,18 +39,12 @@ public class DatasetLoader
 
     private DatasetLoader()
     {
-        Random.InitState(1);
         this.placesDatasetFiles = Directory.GetFiles("E:/Places Dataset/", "*.jpg");
         this.loadedImages = new Dictionary<int, Texture2DTracker>();
 
         for (int i = 0; i < LOADED_IMG_LIMIT; i++)
         {
-            int key = Random.Range(0, this.placesDatasetFiles.Length);
-            byte[] imgBytes = File.ReadAllBytes(this.placesDatasetFiles[key]);
-            this.loadedImages[key] = new Texture2DTracker(key);
-            this.loadedImages[key].loadedImg = new Texture2D(256, 256, TextureFormat.ARGB4444, false);
-            this.loadedImages[key].loadedImg.LoadImage(imgBytes);
-            this.loadedImages[key].loadedImg.Apply();
+            this.GetRandomImage();
         }
         
     }

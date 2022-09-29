@@ -16,10 +16,10 @@ public class CameraRecordingV2 : MonoBehaviour
     [SerializeField] private Camera cameraWithShadows;
     [SerializeField] private Camera cameraNoShadows;
 
-    private const string BASE_PATH = "E:/SynthWeather Dataset 10/";
+    private const string BASE_PATH = "E:/SynthWeather Dataset 10_2/";
 
-    public static int SAVE_EVERY_FRAME = 20000;
-    public static int REFRESH_SCENE_PER_FRAME = SAVE_EVERY_FRAME * 100;
+    public static int SAVE_EVERY_FRAME = 5;
+    public static int REFRESH_SCENE_PER_FRAME = 1000;
     //public static int REFRESH_SCENE_PER_FRAME = SAVE_EVERY_FRAME * 20;
 
     private const int MAX_IMAGES_TO_SAVE = 250000;
@@ -27,7 +27,7 @@ public class CameraRecordingV2 : MonoBehaviour
     private const int CAPTURE_FRAME_RATE = 5;
 
     private long frames = 0;
-    private int counter = 0;
+    private int counter = 512;
     private const int STARTING_IMG_INDEX = 0;
 
     private string currentFolderDir_WithShadows;
@@ -67,7 +67,7 @@ public class CameraRecordingV2 : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Random.InitState(1);
+        Random.InitState(this.counter);
 
         this.AttachCameras();
         Time.captureFramerate = CAPTURE_FRAME_RATE;
@@ -94,10 +94,9 @@ public class CameraRecordingV2 : MonoBehaviour
             Process.Start(psi);*/
         }
 
-        float multiplier = Time.captureDeltaTime * Time.timeScale;
-        this.frames += Mathf.RoundToInt(multiplier);
+        this.frames++;
 
-;       if (this.frames < 8000) //skip first N frames
+;       if (this.frames < 100) //skip first N frames
         {
             Debug.Log("Skipping " + this.frames+ " for sync.");
             return;
@@ -109,6 +108,7 @@ public class CameraRecordingV2 : MonoBehaviour
             {
                 this.WriteRGBCam();
                 this.WriteRGBCam_NoShadows();
+                //Debug.Log("Saving frame: " + this.frames);
             }
             else
             {
@@ -118,11 +118,11 @@ public class CameraRecordingV2 : MonoBehaviour
             this.counter++;
         }
 
-        /*if (this.frames % (REFRESH_SCENE_PER_FRAME * 10) == 0)
+        if (this.frames % (REFRESH_SCENE_PER_FRAME * 10) == 0)
         {
             Debug.Log("Clearing image dictionary.");
             DatasetLoader.GetInstance().ClearImageDictionary();
-        }*/
+        }
     }
 
     void WriteRGBCam()
