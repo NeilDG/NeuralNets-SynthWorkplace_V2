@@ -36,17 +36,26 @@ public class ImageBoxRenderer : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        float multiplier = Time.captureDeltaTime * Time.timeScale;
+        /*float multiplier = Time.captureDeltaTime * Time.timeScale;
         this.frames += Mathf.RoundToInt(multiplier);
         if (this.frames % CameraRecordingV2.REFRESH_SCENE_PER_FRAME == 0)
         {
             this.frames = Mathf.RoundToInt(multiplier);
             this.RandomizeScale();
-            this.RandomizeMaterial();
+            //this.RandomizeMaterial();
         }
         else
         {
             //Debug.Log("Image box frame count: " +frames);
+        }*/
+
+        this.frames++;
+        this.RandomizeScale();
+
+        if (this.frames % CameraRecordingV2.REFRESH_SCENE_PER_FRAME == 0)
+        {
+            this.frames = 0;
+            this.RandomizeMaterial();
         }
     }
 

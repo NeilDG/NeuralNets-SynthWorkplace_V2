@@ -29,14 +29,16 @@ public class CameraRigRandomizer : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        this.ticks += Time.deltaTime;
+        /*this.ticks += Time.captureDeltaTime;
         if (this.ticks >= INTERVAL)
         {
             this.ticks = 0.0f;
             this.RandomizeCamera();
-        }
+        }*/
+
+        this.RandomizeCamera();
     }
 
     private void RandomizeCamera()
