@@ -118,11 +118,11 @@ public class CameraRecordingV2 : MonoBehaviour
             this.counter++;
         }
 
-        /*if (this.frames % (REFRESH_SCENE_PER_FRAME * 10) == 0)
+        if (this.frames % (REFRESH_SCENE_PER_FRAME * 10) == 0)
         {
             Debug.Log("Clearing image dictionary.");
             DatasetLoader.GetInstance().ClearImageDictionary();
-        }*/
+        }
     }
 
     void WriteRGBCam()
