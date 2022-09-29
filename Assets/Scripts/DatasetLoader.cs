@@ -39,7 +39,6 @@ public class DatasetLoader
 
     private DatasetLoader()
     {
-        Random.InitState(1);
         this.placesDatasetFiles = Directory.GetFiles("E:/Places Dataset/", "*.jpg");
         this.loadedImages = new Dictionary<int, Texture2DTracker>();
 

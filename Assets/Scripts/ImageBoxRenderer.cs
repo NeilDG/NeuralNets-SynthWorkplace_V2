@@ -11,6 +11,9 @@ public class ImageBoxRenderer : MonoBehaviour
     private const float MIN_SCALE_Y = 10.0f;
     private const float MAX_SCALE_Y = 50.0f;
 
+    private const float MIN_SCALE_X = 10.0f;
+    private const float MAX_SCALE_X = 20.0f;
+
     private const float MIN_INTERVAL = 2.0f;
     private const float MAX_INTERVAL = 4.0f;
     
@@ -18,11 +21,14 @@ public class ImageBoxRenderer : MonoBehaviour
     private int frames = 0;
     private int matCount = 0;
 
+    private Vector3 baseScale;
+
     // Start is called before the first frame update
     [ExecuteAlways]
     void Start()
     {
-        Random.InitState(1);
+        this.baseScale = this.transform.localScale;
+
         this.RandomizeScale();
         this.RandomizeMaterial();
     }
@@ -47,8 +53,10 @@ public class ImageBoxRenderer : MonoBehaviour
     private void RandomizeScale()
     {
         Transform objectTransform = this.baseRenderer.transform;
-        Vector3 localScale = objectTransform.localScale;
+        Vector3 localScale = new Vector3(baseScale.x, baseScale.y, baseScale.z);
+        localScale.x += Random.Range(MIN_SCALE_X, MAX_SCALE_X);
         localScale.y = Random.Range(MIN_SCALE_Y, MAX_SCALE_Y);
+        localScale.z += Random.Range(MIN_SCALE_X, MAX_SCALE_X);
 
         Vector3 localPos = objectTransform.localPosition;
         localPos.y = ((localScale.y - MIN_SCALE_Y) / 2.0f) + 5.0f;
