@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Debug = UnityEngine.Debug;
 
 /// <summary>
 /// For shadow scene dataset recording
@@ -21,15 +23,16 @@ public class CameraRecordingV2 : MonoBehaviour
 
     [SerializeField] private ShadowDatasetType shadowDatasetType;
 
-    private const string BASE_PATH = "E:/SynthWeather Dataset 9/";
+    private const string BASE_PATH = "E:/SynthWeather Dataset 10/";
 
-    private const int SAVE_EVERY_FRAME = 20000;
-    private const int MAX_IMAGES_TO_SAVE = 250;
+    public static int SAVE_EVERY_FRAME = 20000;
+    private const int MAX_IMAGES_TO_SAVE = 250000;
     private const int MAX_IMAGES_TO_SAVE_DEBUG = 10;
     private const int CAPTURE_FRAME_RATE = 5;
 
     private int frames = 0;
     private int counter = 0;
+    private const int STARTING_IMG_INDEX = 14298;
 
     private string currentFolderDir;
     private string[] skyboxList;
@@ -73,6 +76,8 @@ public class CameraRecordingV2 : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Random.InitState(1);
+
         this.AttachCameras();
         Time.captureFramerate = CAPTURE_FRAME_RATE;
 
@@ -87,33 +92,47 @@ public class CameraRecordingV2 : MonoBehaviour
     {
         int sceneIndex = SceneManager.GetActiveScene().buildIndex;
         string sceneName = SceneManager.GetActiveScene().name;
-        if (sceneIndex > 0 && this.counter >= MAX_IMAGES_TO_SAVE)
+        if (this.counter >= MAX_IMAGES_TO_SAVE)
         {
             Debug.Log("Done saving images for skybox: " + sceneName);
 
             Object.DestroyImmediate(this.gameObject);
             EventBroadcaster.Instance.PostEvent(EventNames.ON_RECORDING_FINISHED);
-        }
-        else if (sceneIndex == 0 && this.counter >= MAX_IMAGES_TO_SAVE_DEBUG)
-        {
-            Object.DestroyImmediate(this.gameObject);
-            EventBroadcaster.Instance.PostEvent(EventNames.ON_RECORDING_FINISHED);
+
+            /*var psi = new ProcessStartInfo("shutdown", "/s /t 0");
+            psi.CreateNoWindow = true;
+            psi.UseShellExecute = false;
+            Process.Start(psi);*/
         }
 
         float multiplier = Time.captureDeltaTime * Time.timeScale;
         this.frames += Mathf.RoundToInt(multiplier);
 
-;       if (this.frames < 80000) //skip first N frames
+;       if (this.frames < 8000) //skip first N frames
         {
-            //Debug.Log("Skipping " + this.frames+ " for sync.");
+            Debug.Log("Skipping " + this.frames+ " for sync.");
             return;
         }
 
         if (this.frames % SAVE_EVERY_FRAME == 0)
         {
-            this.WriteRGBCam();
+            if (this.counter >= STARTING_IMG_INDEX) //skip writing
+            {
+                this.WriteRGBCam();
+            }
+            else
+            {
+                if(this.counter % 1000 == 0)
+                    Debug.Log("Skipping img save counter: " + this.counter + ".");
+            }
             this.counter++;
         }
+
+        /*if (this.frames % (SAVE_EVERY_FRAME * 10) == 0)
+        {
+            Debug.Log("Clearing image dictionary.");
+            DatasetLoader.GetInstance().ClearImageDictionary();
+        }*/
     }
 
     void WriteRGBCam()
@@ -129,7 +148,8 @@ public class CameraRecordingV2 : MonoBehaviour
         Texture2D Image = new Texture2D(width, height);
         Image.ReadPixels(new Rect(0, 0, width, height), 0, 0);
         Image.Apply();
-        RenderTexture.active = currentRT;
+        //RenderTexture.active = currentRT
+        RenderTexture.active = null;
 
         var Bytes = Image.EncodeToPNG();
         Destroy(Image);

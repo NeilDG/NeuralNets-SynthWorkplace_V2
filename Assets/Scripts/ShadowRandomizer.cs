@@ -7,6 +7,7 @@ using Vector3 = UnityEngine.Vector3;
 public class ShadowRandomizer : MonoBehaviour
 {
     [SerializeField] private Transform[] objectList;
+    [SerializeField] private Light directionalLight;
 
     private const float MIN_POS_X = -60.0f;
     private const float MAX_POS_X = 60.0f;
@@ -42,6 +43,7 @@ public class ShadowRandomizer : MonoBehaviour
         {
             this.ticks = 0.0f;
             this.StartRandomization();
+            this.RandomizeLightDirection();
         }
     }
 
@@ -67,5 +69,20 @@ public class ShadowRandomizer : MonoBehaviour
             this.objectList[i].localEulerAngles = rotAngles;
             this.objectList[i].localScale = scale;
         }
+    }
+
+    private void RandomizeLightDirection()
+    {
+        const float MIN_ANGLE = 15.0f;
+        const float MAX_ANGLE = 170.0f;
+
+        Transform lightTransform = this.directionalLight.transform;
+        Vector3 rotAngles = lightTransform.localEulerAngles;
+
+        rotAngles.x = Random.Range(MIN_ANGLE, MAX_ANGLE);
+        rotAngles.y = Random.Range(MIN_ANGLE, MAX_ANGLE);
+
+        lightTransform.localEulerAngles = rotAngles;
+
     }
 }

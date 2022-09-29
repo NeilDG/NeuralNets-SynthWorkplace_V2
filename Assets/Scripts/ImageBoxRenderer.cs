@@ -11,8 +11,11 @@ public class ImageBoxRenderer : MonoBehaviour
     private const float MAX_SCALE_Y = 50.0f;
 
     private const float MIN_INTERVAL = 2.0f;
-    private const float MAX_INTERVAL = 3.0f;
-    private float ticks = 0.0f;
+    private const float MAX_INTERVAL = 4.0f;
+    
+    //private float ticks = 0.0f;
+    private int frames = 0;
+    private int matCount = 0;
 
     // Start is called before the first frame update
     [ExecuteAlways]
@@ -23,14 +26,19 @@ public class ImageBoxRenderer : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        this.ticks += Time.deltaTime;
-        if (this.ticks > Random.Range(MIN_INTERVAL, MAX_INTERVAL))
+        float multiplier = Time.captureDeltaTime * Time.timeScale;
+        this.frames += Mathf.RoundToInt(multiplier);
+        if (this.frames % (CameraRecordingV2.SAVE_EVERY_FRAME * 100) == 0)
         {
-            this.ticks = 0.0f;
+            this.frames = Mathf.RoundToInt(multiplier);
             this.RandomizeScale();
             this.RandomizeMaterial();
+        }
+        else
+        {
+            //Debug.Log("Image box frame count: " +frames);
         }
     }
 
@@ -49,16 +57,32 @@ public class ImageBoxRenderer : MonoBehaviour
 
     private void RandomizeMaterial()
     {
-        Color baseColor = this.baseRenderer.material.color;
+        Material baseMaterial = new Material(this.baseRenderer.material);
+        baseMaterial.name = "Material_Instance_" + this.matCount;
+        this.matCount++;
+
+        GameObject.Destroy(this.baseRenderer.material.mainTexture);
+        GameObject.Destroy(this.baseRenderer.material);
+        
+        /*for (int i = 0; i < this.baseRenderer.materials.Length; i++)
+        {
+            GameObject.Destroy(this.baseRenderer.materials[i]);
+        }*/
+
+        Color baseColor = baseMaterial.color;
         baseColor.r = Random.Range(1.0f, 1.0f);
         baseColor.g = Random.Range(1.0f, 1.0f);
         baseColor.b = Random.Range(1.0f, 1.0f);
-        this.baseRenderer.material.color = baseColor;
+        baseMaterial.color = baseColor;
 
-        this.baseRenderer.material.SetFloat("_Metallic", Random.Range(0.0f, 0.0f));
-        this.baseRenderer.material.SetFloat("_Glossiness", Random.Range(0.0f, 0.0f));
+        baseMaterial.SetFloat("_Metallic", Random.Range(0.0f, 0.0f));
+        baseMaterial.SetFloat("_Glossiness", Random.Range(0.0f, 0.0f));
 
-        this.baseRenderer.material.mainTexture = DatasetLoader.GetInstance().GetRandomImage();
+        Texture mainTexture = new Texture2D(256, 256);
+        mainTexture = DatasetLoader.GetInstance().GetRandomImage();
+
+        baseMaterial.mainTexture = mainTexture;
+        this.baseRenderer.material = baseMaterial;
 
     }
 }

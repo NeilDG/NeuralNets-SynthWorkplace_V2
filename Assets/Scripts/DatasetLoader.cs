@@ -19,19 +19,22 @@ public class DatasetLoader
     }
 
     private string[] placesDatasetFiles;
-    private Texture2D[] loadedImages;
+    private Dictionary<int, Texture2D> loadedImages;
+    private const int LOADED_IMG_LIMIT = 1000;
 
     private DatasetLoader()
     {
+        Random.InitState(1);
         this.placesDatasetFiles = Directory.GetFiles("E:/Places Dataset/", "*.jpg");
-        this.loadedImages = new Texture2D[this.placesDatasetFiles.Length];
+        this.loadedImages = new Dictionary<int, Texture2D>();
 
-        for (int i = 0; i < 250; i++)
+        for (int i = 0; i < LOADED_IMG_LIMIT; i++)
         {
-            byte[] imgBytes = File.ReadAllBytes(placesDatasetFiles[i]);
-            this.loadedImages[i] = new Texture2D(512, 512, TextureFormat.ARGB4444, false);
-            this.loadedImages[i].LoadImage(imgBytes);
-            this.loadedImages[i].Apply();
+            int key = Random.Range(0, this.placesDatasetFiles.Length);
+            byte[] imgBytes = File.ReadAllBytes(this.placesDatasetFiles[key]);
+            this.loadedImages[key] = new Texture2D(256, 256, TextureFormat.ARGB4444, false);
+            this.loadedImages[key].LoadImage(imgBytes);
+            this.loadedImages[key].Apply();
         }
         
     }
@@ -43,6 +46,53 @@ public class DatasetLoader
 
     public Texture2D GetRandomImage()
     {
-        return this.loadedImages[Random.Range(0, this.loadedImages.Length)];
+        int key = Random.Range(0, this.placesDatasetFiles.Length);
+
+        if (this.loadedImages.ContainsKey(key))
+        {
+            return this.loadedImages[key];
+        }
+        else
+        {
+            //if capacity is full, unload 1 random image in dictionary
+            this.UnloadRandomImage();
+
+            byte[] imgBytes = File.ReadAllBytes(this.placesDatasetFiles[key]);
+            this.loadedImages[key] = new Texture2D(256, 256, TextureFormat.ARGB4444, false);
+            this.loadedImages[key].LoadImage(imgBytes);
+            this.loadedImages[key].Apply();
+
+            return this.loadedImages[key];
+        }
+    }
+
+    private void UnloadRandomImage()
+    {
+        if (this.loadedImages.Count >= LOADED_IMG_LIMIT)
+        {
+            int randomKey = Random.Range(0, this.placesDatasetFiles.Length);
+            if (this.loadedImages.ContainsKey(randomKey))
+            {
+                GameObject.Destroy(this.loadedImages[randomKey]);
+                this.loadedImages.Remove(randomKey);
+
+                Debug.Log("Successfully unloaded: " + randomKey);
+                Resources.UnloadUnusedAssets();
+            }
+        }
+    }
+
+    public void ClearImageDictionary()
+    {
+        for (int key = 0; key < this.placesDatasetFiles.Length; key++)
+        {
+            if (this.loadedImages.ContainsKey(key))
+            {
+                GameObject.Destroy(this.loadedImages[key]);
+                this.loadedImages[key].hideFlags = HideFlags.HideAndDontSave;
+            }
+        }
+
+        this.loadedImages.Clear();
     }
 }
