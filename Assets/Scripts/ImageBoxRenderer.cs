@@ -6,6 +6,7 @@ using UnityEngine;
 public class ImageBoxRenderer : MonoBehaviour
 {
     [SerializeField] private MeshRenderer baseRenderer;
+    [SerializeField] private DatasetLoader.Texture2DTracker textureTracker;
 
     private const float MIN_SCALE_Y = 10.0f;
     private const float MAX_SCALE_Y = 50.0f;
@@ -21,6 +22,7 @@ public class ImageBoxRenderer : MonoBehaviour
     [ExecuteAlways]
     void Start()
     {
+        Random.InitState(1);
         this.RandomizeScale();
         this.RandomizeMaterial();
     }
@@ -30,7 +32,7 @@ public class ImageBoxRenderer : MonoBehaviour
     {
         float multiplier = Time.captureDeltaTime * Time.timeScale;
         this.frames += Mathf.RoundToInt(multiplier);
-        if (this.frames % (CameraRecordingV2.SAVE_EVERY_FRAME * 100) == 0)
+        if (this.frames % CameraRecordingV2.REFRESH_SCENE_PER_FRAME == 0)
         {
             this.frames = Mathf.RoundToInt(multiplier);
             this.RandomizeScale();
@@ -61,8 +63,14 @@ public class ImageBoxRenderer : MonoBehaviour
         baseMaterial.name = "Material_Instance_" + this.matCount;
         this.matCount++;
 
+        //destroy previous material
         GameObject.Destroy(this.baseRenderer.material.mainTexture);
         GameObject.Destroy(this.baseRenderer.material);
+        if (this.textureTracker != null)
+        {
+            DatasetLoader.GetInstance().TagImageForClearing(this.textureTracker);
+            this.textureTracker = null;
+        }
         
         /*for (int i = 0; i < this.baseRenderer.materials.Length; i++)
         {
@@ -79,7 +87,9 @@ public class ImageBoxRenderer : MonoBehaviour
         baseMaterial.SetFloat("_Glossiness", Random.Range(0.0f, 0.0f));
 
         Texture mainTexture = new Texture2D(256, 256);
-        mainTexture = DatasetLoader.GetInstance().GetRandomImage();
+        this.textureTracker = DatasetLoader.GetInstance().GetRandomImage();
+        mainTexture = this.textureTracker.loadedImg;
+        this.textureTracker.beingUsed = true;
 
         baseMaterial.mainTexture = mainTexture;
         this.baseRenderer.material = baseMaterial;

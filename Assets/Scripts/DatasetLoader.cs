@@ -19,34 +19,49 @@ public class DatasetLoader
     }
 
     private string[] placesDatasetFiles;
-    private Dictionary<int, Texture2D> loadedImages;
-    private const int LOADED_IMG_LIMIT = 1000;
+
+    public class Texture2DTracker
+    {
+        public int key = 0;
+        public Texture2D loadedImg = null;
+        public bool beingUsed = false;
+
+        public Texture2DTracker(int key)
+        {
+            this.key = 0;
+        }
+    }
+
+    private Dictionary<int, Texture2DTracker> loadedImages;
+
+    private const int LOADED_IMG_LIMIT = 3000;
+    private int currentKey = 0;
 
     private DatasetLoader()
     {
         Random.InitState(1);
         this.placesDatasetFiles = Directory.GetFiles("E:/Places Dataset/", "*.jpg");
-        this.loadedImages = new Dictionary<int, Texture2D>();
+        this.loadedImages = new Dictionary<int, Texture2DTracker>();
 
         for (int i = 0; i < LOADED_IMG_LIMIT; i++)
         {
             int key = Random.Range(0, this.placesDatasetFiles.Length);
             byte[] imgBytes = File.ReadAllBytes(this.placesDatasetFiles[key]);
-            this.loadedImages[key] = new Texture2D(256, 256, TextureFormat.ARGB4444, false);
-            this.loadedImages[key].LoadImage(imgBytes);
-            this.loadedImages[key].Apply();
+            this.loadedImages[key] = new Texture2DTracker(key);
+            this.loadedImages[key].loadedImg = new Texture2D(256, 256, TextureFormat.ARGB4444, false);
+            this.loadedImages[key].loadedImg.LoadImage(imgBytes);
+            this.loadedImages[key].loadedImg.Apply();
         }
         
     }
-
-    public string[] GetPlacesDatasetFiles()
+    public Texture2DTracker GetRandomImage()
     {
-        return this.placesDatasetFiles;
-    }
-
-    public Texture2D GetRandomImage()
-    {
-        int key = Random.Range(0, this.placesDatasetFiles.Length);
+        int key = this.currentKey; //iterate through each places image
+        this.currentKey++;
+        if (this.currentKey >= this.placesDatasetFiles.Length)
+        {
+            this.currentKey = 0;
+        }
 
         if (this.loadedImages.ContainsKey(key))
         {
@@ -58,9 +73,10 @@ public class DatasetLoader
             this.UnloadRandomImage();
 
             byte[] imgBytes = File.ReadAllBytes(this.placesDatasetFiles[key]);
-            this.loadedImages[key] = new Texture2D(256, 256, TextureFormat.ARGB4444, false);
-            this.loadedImages[key].LoadImage(imgBytes);
-            this.loadedImages[key].Apply();
+            this.loadedImages[key] = new Texture2DTracker(key);
+            this.loadedImages[key].loadedImg = new Texture2D(256, 256, TextureFormat.ARGB4444, false);
+            this.loadedImages[key].loadedImg.LoadImage(imgBytes);
+            this.loadedImages[key].loadedImg.Apply();
 
             return this.loadedImages[key];
         }
@@ -73,12 +89,28 @@ public class DatasetLoader
             int randomKey = Random.Range(0, this.placesDatasetFiles.Length);
             if (this.loadedImages.ContainsKey(randomKey))
             {
-                GameObject.Destroy(this.loadedImages[randomKey]);
-                this.loadedImages.Remove(randomKey);
+                if (this.loadedImages[randomKey].beingUsed == false)
+                {
+                    GameObject.Destroy(this.loadedImages[randomKey].loadedImg);
+                    this.loadedImages.Remove(randomKey);
 
-                Debug.Log("Successfully unloaded: " + randomKey);
-                Resources.UnloadUnusedAssets();
+                    Debug.Log("Successfully unloaded: " + randomKey);
+                    Resources.UnloadUnusedAssets();
+                }
+                
             }
+            else if (this.loadedImages.ContainsKey(randomKey) && this.loadedImages[randomKey].beingUsed)
+            {
+                Debug.Log("Image: " + randomKey + " is still being used. Cannot unload.");
+            }
+        }
+    }
+
+    public void TagImageForClearing(Texture2DTracker textureTracker)
+    {
+        if (this.loadedImages.ContainsKey(textureTracker.key))
+        {
+            this.loadedImages[textureTracker.key].beingUsed = false;
         }
     }
 
@@ -86,13 +118,21 @@ public class DatasetLoader
     {
         for (int key = 0; key < this.placesDatasetFiles.Length; key++)
         {
-            if (this.loadedImages.ContainsKey(key))
+            if (this.loadedImages.ContainsKey(key) && this.loadedImages[key].beingUsed == false)
             {
-                GameObject.Destroy(this.loadedImages[key]);
-                this.loadedImages[key].hideFlags = HideFlags.HideAndDontSave;
+
+                GameObject.Destroy(this.loadedImages[key].loadedImg);
+                this.loadedImages.Remove(key);
+
+                Debug.Log("Successfully unloaded: " + key);
+            }
+
+            else if (this.loadedImages.ContainsKey(key) && this.loadedImages[key].beingUsed)
+            {
+                Debug.Log("Image: " + key + " is still being used. Cannot unload.");
             }
         }
 
-        this.loadedImages.Clear();
+        Resources.UnloadUnusedAssets();
     }
 }

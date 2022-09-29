@@ -19,8 +19,6 @@ public class AutomatedRecorder : MonoBehaviour
 
     [SerializeField] private RecordingType recordingType;
 
-    [SerializeField] private CameraRecordingV2.ShadowDatasetType shadowDatasetType;
-
     //private Camera cameraViewRef;
     //private Transform cameraViewParent;
     //private Camera cameraView;
@@ -79,7 +77,7 @@ public class AutomatedRecorder : MonoBehaviour
     {
         yield return new WaitForSeconds(Time.captureDeltaTime * 1.0f);
         this.index++;
-        GameObject.Instantiate(this.cameraRecorder).GetComponent<CameraRecordingV2>().SetShadowDatasetType(this.shadowDatasetType);
+        //GameObject.Instantiate(this.cameraRecorder).GetComponent<CameraRecordingV2>().SetShadowDatasetType(this.shadowDatasetType);
     }
 
     private void OnRecordingFinished()

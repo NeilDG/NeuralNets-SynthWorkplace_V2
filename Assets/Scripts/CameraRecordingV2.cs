@@ -13,50 +13,35 @@ using Debug = UnityEngine.Debug;
 /// </summary>
 public class CameraRecordingV2 : MonoBehaviour
 {
-    [SerializeField] private Camera cleanCamera;
-
-    public enum ShadowDatasetType
-    {
-        WITH_SHADOWS,
-        NO_SHADOWS,
-    }
-
-    [SerializeField] private ShadowDatasetType shadowDatasetType;
+    [SerializeField] private Camera cameraWithShadows;
+    [SerializeField] private Camera cameraNoShadows;
 
     private const string BASE_PATH = "E:/SynthWeather Dataset 10/";
 
     public static int SAVE_EVERY_FRAME = 20000;
+    public static int REFRESH_SCENE_PER_FRAME = SAVE_EVERY_FRAME * 100;
+    //public static int REFRESH_SCENE_PER_FRAME = SAVE_EVERY_FRAME * 20;
+
     private const int MAX_IMAGES_TO_SAVE = 250000;
     private const int MAX_IMAGES_TO_SAVE_DEBUG = 10;
     private const int CAPTURE_FRAME_RATE = 5;
 
-    private int frames = 0;
+    private long frames = 0;
     private int counter = 0;
-    private const int STARTING_IMG_INDEX = 14298;
+    private const int STARTING_IMG_INDEX = 0;
 
-    private string currentFolderDir;
-    private string[] skyboxList;
-
-    static string[] PopulateSkyboxes()
-    {
-        string[] guids = AssetDatabase.FindAssets("equirect t:material");
-        string[] assetPaths = new string[guids.Length];
-        for (int i = 0; i < guids.Length; i++)
-        {
-            assetPaths[i] = AssetDatabase.GUIDToAssetPath(guids[i]);
-        }
-
-        return assetPaths;
-    }
+    private string currentFolderDir_WithShadows;
+    private string currentFolderDir_NoShadows;
 
     void AttachCameras()
     {
-        this.cleanCamera = GameObject.Find("CleanCamera").GetComponent<Camera>();
+        this.cameraWithShadows = GameObject.Find("CameraWithShadows").GetComponent<Camera>();
+        this.cameraNoShadows = GameObject.Find("CameraNoShadows").GetComponent<Camera>();
     }
 
     void CreateSubFolder(string sceneName)
     {
-        if (this.shadowDatasetType == ShadowDatasetType.WITH_SHADOWS)
+        /*if (this.shadowDatasetType == ShadowDatasetType.WITH_SHADOWS)
         {
             this.currentFolderDir = BASE_PATH + "/rgb/" + sceneName + "/";
             Directory.CreateDirectory(this.currentFolderDir);
@@ -65,13 +50,19 @@ public class CameraRecordingV2 : MonoBehaviour
         {
             this.currentFolderDir = BASE_PATH + "/rgb_noshadows/" + sceneName + "/";
             Directory.CreateDirectory(this.currentFolderDir);
-        }
+        }*/
+
+        this.currentFolderDir_WithShadows = BASE_PATH + "/rgb/" + sceneName + "/";
+        Directory.CreateDirectory(this.currentFolderDir_WithShadows);
+
+        this.currentFolderDir_NoShadows = BASE_PATH + "/rgb_noshadows/" + sceneName + "/";
+        Directory.CreateDirectory(this.currentFolderDir_NoShadows);
     }
 
-    public void SetShadowDatasetType(ShadowDatasetType datasetType)
+    /*public void SetShadowDatasetType(ShadowDatasetType datasetType)
     {
         this.shadowDatasetType = datasetType;
-    }
+    }*/
 
     // Start is called before the first frame update
     void Start()
@@ -80,8 +71,6 @@ public class CameraRecordingV2 : MonoBehaviour
 
         this.AttachCameras();
         Time.captureFramerate = CAPTURE_FRAME_RATE;
-
-        this.skyboxList = PopulateSkyboxes();
 
         string sceneName = SceneManager.GetActiveScene().name;
         this.CreateSubFolder(sceneName);
@@ -119,6 +108,7 @@ public class CameraRecordingV2 : MonoBehaviour
             if (this.counter >= STARTING_IMG_INDEX) //skip writing
             {
                 this.WriteRGBCam();
+                this.WriteRGBCam_NoShadows();
             }
             else
             {
@@ -128,7 +118,7 @@ public class CameraRecordingV2 : MonoBehaviour
             this.counter++;
         }
 
-        /*if (this.frames % (SAVE_EVERY_FRAME * 10) == 0)
+        /*if (this.frames % (REFRESH_SCENE_PER_FRAME * 10) == 0)
         {
             Debug.Log("Clearing image dictionary.");
             DatasetLoader.GetInstance().ClearImageDictionary();
@@ -138,12 +128,12 @@ public class CameraRecordingV2 : MonoBehaviour
     void WriteRGBCam()
     {
         RenderTexture currentRT = RenderTexture.active;
-        RenderTexture.active = this.cleanCamera.targetTexture;
+        RenderTexture.active = this.cameraWithShadows.targetTexture;
 
-        this.cleanCamera.Render();
+        this.cameraWithShadows.Render();
 
-        int width = this.cleanCamera.targetTexture.width;
-        int height = this.cleanCamera.targetTexture.height;
+        int width = this.cameraWithShadows.targetTexture.width;
+        int height = this.cameraWithShadows.targetTexture.height;
 
         Texture2D Image = new Texture2D(width, height);
         Image.ReadPixels(new Rect(0, 0, width, height), 0, 0);
@@ -154,7 +144,30 @@ public class CameraRecordingV2 : MonoBehaviour
         var Bytes = Image.EncodeToPNG();
         Destroy(Image);
 
-        File.WriteAllBytes(this.currentFolderDir + "/synth_" + this.counter + ".png", Bytes);
+        File.WriteAllBytes(this.currentFolderDir_WithShadows + "/synth_" + this.counter + ".png", Bytes);
+        //Debug.Log("Saved frame number: " + this.counter);
+    }
+
+    void WriteRGBCam_NoShadows()
+    {
+        RenderTexture currentRT = RenderTexture.active;
+        RenderTexture.active = this.cameraNoShadows.targetTexture;
+
+        this.cameraNoShadows.Render();
+
+        int width = this.cameraNoShadows.targetTexture.width;
+        int height = this.cameraNoShadows.targetTexture.height;
+
+        Texture2D Image = new Texture2D(width, height);
+        Image.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+        Image.Apply();
+        //RenderTexture.active = currentRT
+        RenderTexture.active = null;
+
+        var Bytes = Image.EncodeToPNG();
+        Destroy(Image);
+
+        File.WriteAllBytes(this.currentFolderDir_NoShadows + "/synth_" + this.counter + ".png", Bytes);
         //Debug.Log("Saved frame number: " + this.counter);
     }
 }
