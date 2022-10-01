@@ -9,22 +9,22 @@ public class ShadowRandomizer : MonoBehaviour
     [SerializeField] private Transform[] objectList;
     [SerializeField] private Light directionalLight;
 
-    private const float MIN_POS_X = -60.0f;
-    private const float MAX_POS_X = 60.0f;
+    private const float MIN_POS_X = -7.0f;
+    private const float MAX_POS_X = 7.0f;
 
-    private const float MIN_POS_Z = -60.0f;
-    private const float MAX_POS_Z = 60.0f;
+    private const float MIN_POS_Y = -5.0f;
+    private const float MAX_POS_Y = 5.0f;
 
     private const float MIN_SCALE_X = 5.0f;
-    private const float MIN_SCALE_Z = 5.0f;
+    private const float MIN_SCALE_Y = 5.0f;
 
     private const float MAX_SCALE_X = 70.0f;
-    private const float MAX_SCALE_Z = 70.0f;
+    private const float MAX_SCALE_Y = 70.0f;
 
-    private const float MIN_ROT_HORIZONTAL = 0.0f;
+    private const float MIN_ROT_HORIZONTAL = -85.0f;
     private const float MAX_ROT_HORIZONTAL = 85.0f;
-    private const float MIN_ROT_VERTICAL = 0.0f;
-    private const float MAX_ROT_VERTICAL = 10.0f;
+    private const float MIN_ROT_VERTICAL = -30.0f;
+    private const float MAX_ROT_VERTICAL = 30.0f;
 
     private const float INTERVAL = 1.0f;
     private float ticks = 0.0f;
@@ -38,13 +38,8 @@ public class ShadowRandomizer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        this.ticks += Time.deltaTime;
-        if (this.ticks > INTERVAL)
-        {
-            this.ticks = 0.0f;
-            this.StartRandomization();
-            this.RandomizeLightDirection();
-        }
+        this.StartRandomization();
+        this.RandomizeLightDirection();
     }
 
     private void StartRandomization()
@@ -56,10 +51,10 @@ public class ShadowRandomizer : MonoBehaviour
             Vector3 scale = this.objectList[i].localScale;
 
             pos.x = Random.Range(MIN_POS_X, MAX_POS_X);
-            pos.z = Random.Range(MIN_POS_Z, MAX_POS_Z);
+            pos.y = Random.Range(MIN_POS_Y, MAX_POS_Y);
 
             scale.x = Random.Range(MIN_SCALE_X, MAX_SCALE_X);
-            scale.z = Random.Range(MIN_SCALE_Z, MAX_SCALE_Z);
+            scale.y = Random.Range(MIN_SCALE_Y, MAX_SCALE_Y);
 
             rotAngles.x = Random.Range(MIN_ROT_VERTICAL, MAX_ROT_VERTICAL);
             rotAngles.y = Random.Range(MIN_ROT_HORIZONTAL, MAX_ROT_HORIZONTAL);

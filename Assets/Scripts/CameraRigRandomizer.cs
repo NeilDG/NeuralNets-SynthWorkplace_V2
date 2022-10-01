@@ -22,7 +22,8 @@ public class CameraRigRandomizer : MonoBehaviour
         this.minPos = new Vector3(-340.0f, 28.0f, -265.0f);
         this.maxPos = new Vector3(350.0f, 80.0f, 105.0f);
 
-        this.minRot = Vector3.zero;
+        //this.minRot = Vector3.zero;
+        this.minRot = new Vector3(65.0f, 65.0f, 65.0f);
         this.maxRot = new Vector3(90.0f, 90.0f, 0.0f);
 
         this.RandomizeCamera();
