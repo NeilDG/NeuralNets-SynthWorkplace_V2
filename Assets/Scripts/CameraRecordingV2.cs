@@ -24,10 +24,10 @@ public class CameraRecordingV2 : MonoBehaviour
 
     private const int MAX_IMAGES_TO_SAVE = 250000;
     private const int MAX_IMAGES_TO_SAVE_DEBUG = 10;
-    private const int CAPTURE_FRAME_RATE = 5;
+    private const int CAPTURE_FRAME_RATE = 30;
 
     private long frames = 0;
-    private int counter = 512;
+    private int counter = 0;
     private const int STARTING_IMG_INDEX = 0;
 
     private string currentFolderDir_WithShadows;

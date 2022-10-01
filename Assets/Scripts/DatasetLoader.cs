@@ -39,7 +39,17 @@ public class DatasetLoader
 
     private DatasetLoader()
     {
-        this.placesDatasetFiles = Directory.GetFiles("E:/Places Dataset/", "*.jpg");
+        //this.placesDatasetFiles = Directory.GetFiles("E:/Places Dataset/", "*.jpg");
+
+        List<string> istdList = new List<string>();
+        int repeats = 50;
+        for (int i = 0; i < repeats; i++)
+        {
+            string[] istdBaseList = Directory.GetFiles("E:/ISTD_Dataset/train/train_C/", "*.png");
+            istdList.AddRange(istdBaseList);
+        }
+        this.placesDatasetFiles = istdList.ToArray();
+
         this.loadedImages = new Dictionary<int, Texture2DTracker>();
 
         for (int i = 0; i < LOADED_IMG_LIMIT; i++)
