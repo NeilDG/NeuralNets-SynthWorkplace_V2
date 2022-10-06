@@ -8,15 +8,12 @@ public class ImageBoxRenderer : MonoBehaviour
     [SerializeField] private MeshRenderer baseRenderer;
     [SerializeField] private DatasetLoader.Texture2DTracker textureTracker;
 
-    private const float MIN_SCALE_Y = 5.0f;
-    private const float MAX_SCALE_Y = 25.0f;
+    [SerializeField] private float MIN_SCALE_Y = 5.0f;
+    [SerializeField] private float MAX_SCALE_Y = 25.0f;
 
-    private const float MIN_SCALE_X = 5.0f;
-    private const float MAX_SCALE_X = 10.0f;
+    [SerializeField] private float MIN_SCALE_X = 5.0f;
+    [SerializeField] private float MAX_SCALE_X = 10.0f;
 
-    private const float MIN_INTERVAL = 2.0f;
-    private const float MAX_INTERVAL = 4.0f;
-    
     //private float ticks = 0.0f;
     private int frames = 0;
     private int matCount = 0;

@@ -19,16 +19,15 @@ public class CameraRecordingV2 : MonoBehaviour
     private const string BASE_PATH = "E:/SynthWeather Dataset 10_2/";
 
     public static int SAVE_EVERY_FRAME = 5;
-    public static int REFRESH_SCENE_PER_FRAME = 1000;
+    public static int REFRESH_SCENE_PER_FRAME = 5;
     //public static int REFRESH_SCENE_PER_FRAME = SAVE_EVERY_FRAME * 20;
 
-    private const int MAX_IMAGES_TO_SAVE = 250000;
+    private long frames = 0;
+    public static int counter = 24058;
+
+    private static int MAX_IMAGES_TO_SAVE = counter + 10000;
     private const int MAX_IMAGES_TO_SAVE_DEBUG = 10;
     private const int CAPTURE_FRAME_RATE = 30;
-
-    private long frames = 0;
-    private int counter = 0;
-    private const int STARTING_IMG_INDEX = 0;
 
     private string currentFolderDir_WithShadows;
     private string currentFolderDir_NoShadows;
@@ -67,7 +66,7 @@ public class CameraRecordingV2 : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Random.InitState(this.counter);
+        Random.InitState(counter);
 
         this.AttachCameras();
         Time.captureFramerate = CAPTURE_FRAME_RATE;
@@ -81,7 +80,7 @@ public class CameraRecordingV2 : MonoBehaviour
     {
         int sceneIndex = SceneManager.GetActiveScene().buildIndex;
         string sceneName = SceneManager.GetActiveScene().name;
-        if (this.counter >= MAX_IMAGES_TO_SAVE)
+        if (counter >= MAX_IMAGES_TO_SAVE)
         {
             Debug.Log("Done saving images for skybox: " + sceneName);
 
@@ -92,6 +91,8 @@ public class CameraRecordingV2 : MonoBehaviour
             psi.CreateNoWindow = true;
             psi.UseShellExecute = false;
             Process.Start(psi);*/
+
+            Application.Quit();
         }
 
         this.frames++;
@@ -104,18 +105,9 @@ public class CameraRecordingV2 : MonoBehaviour
 
         if (this.frames % SAVE_EVERY_FRAME == 0)
         {
-            if (this.counter >= STARTING_IMG_INDEX) //skip writing
-            {
-                this.WriteRGBCam();
-                this.WriteRGBCam_NoShadows();
-                //Debug.Log("Saving frame: " + this.frames);
-            }
-            else
-            {
-                if(this.counter % 1000 == 0)
-                    Debug.Log("Skipping img save counter: " + this.counter + ".");
-            }
-            this.counter++;
+            this.WriteRGBCam();
+            this.WriteRGBCam_NoShadows();
+            counter++;
         }
 
         if (this.frames % (REFRESH_SCENE_PER_FRAME * 10) == 0)
@@ -144,7 +136,7 @@ public class CameraRecordingV2 : MonoBehaviour
         var Bytes = Image.EncodeToPNG();
         Destroy(Image);
 
-        File.WriteAllBytes(this.currentFolderDir_WithShadows + "/synth_" + this.counter + ".png", Bytes);
+        File.WriteAllBytes(this.currentFolderDir_WithShadows + "/synth_" + counter + ".png", Bytes);
         //Debug.Log("Saved frame number: " + this.counter);
     }
 
@@ -167,7 +159,7 @@ public class CameraRecordingV2 : MonoBehaviour
         var Bytes = Image.EncodeToPNG();
         Destroy(Image);
 
-        File.WriteAllBytes(this.currentFolderDir_NoShadows + "/synth_" + this.counter + ".png", Bytes);
+        File.WriteAllBytes(this.currentFolderDir_NoShadows + "/synth_" + counter + ".png", Bytes);
         //Debug.Log("Saved frame number: " + this.counter);
     }
 }
