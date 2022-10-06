@@ -43,13 +43,21 @@ public class DatasetLoader
 
         List<string> istdList = new List<string>();
         int repeats = 50;
-        for (int i = 0; i < repeats; i++)
+        /*for (int i = 0; i < repeats; i++)
         {
             string[] istdBaseList = Directory.GetFiles("E:/ISTD_Dataset/train/train_C/", "*.png");
+            istdList.AddRange(istdBaseList);
+        }*/
+
+        for (int i = 0; i < repeats; i++)
+        {
+            string[] istdBaseList = Directory.GetFiles("E:/ISTD_Dataset/test/test_C/", "*.png");
             istdList.AddRange(istdBaseList);
         }
         this.placesDatasetFiles = istdList.ToArray();
 
+        this.currentKey = CameraRecordingV2.counter % this.placesDatasetFiles.Length;
+        Debug.Log("Set image ID to:" + this.currentKey);
         this.loadedImages = new Dictionary<int, Texture2DTracker>();
 
         for (int i = 0; i < LOADED_IMG_LIMIT; i++)
@@ -66,6 +74,8 @@ public class DatasetLoader
         {
             this.currentKey = 0;
         }
+
+        //int key = Random.Range(0, this.placesDatasetFiles.Length); //randomly select image from places
 
         if (this.loadedImages.ContainsKey(key))
         {
