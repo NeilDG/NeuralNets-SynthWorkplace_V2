@@ -132,7 +132,7 @@ public class ShadowRandomizer : MonoBehaviour
         int randLight = Random.Range(0, this.rwLightColors.Length);
         this.directionalLight.color = this.rwLightColors[randLight];
 
-        this.directionalLight.shadowStrength = Random.Range(0.2f, 1.0f);
+        //this.directionalLight.shadowStrength = Random.Range(0.4f, 1.0f);
         this.directionalLight.shadowNormalBias = Random.Range(0.4f, 2.5f);
 
     }

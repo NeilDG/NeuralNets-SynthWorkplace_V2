@@ -12,7 +12,7 @@ public class ImageBoxRenderer : MonoBehaviour
     [SerializeField] private float MAX_SCALE_Y = 25.0f;
 
     [SerializeField] private float MIN_SCALE_X = 5.0f;
-    [SerializeField] private float MAX_SCALE_X = 10.0f;
+    [SerializeField] private float MAX_SCALE_X = 80.0f;
 
     //private float ticks = 0.0f;
     private int frames = 0;

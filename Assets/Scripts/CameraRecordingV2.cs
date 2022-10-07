@@ -19,13 +19,13 @@ public class CameraRecordingV2 : MonoBehaviour
     private const string BASE_PATH = "E:/SynthWeather Dataset 10_2/";
 
     public static int SAVE_EVERY_FRAME = 5;
-    public static int REFRESH_SCENE_PER_FRAME = 5;
+    public static int REFRESH_SCENE_PER_FRAME = 1000;
     //public static int REFRESH_SCENE_PER_FRAME = SAVE_EVERY_FRAME * 20;
 
     private long frames = 0;
-    public static int counter = 24058;
+    public static int counter = 65109;
 
-    private static int MAX_IMAGES_TO_SAVE = counter + 10000;
+    private static int MAX_IMAGES_TO_SAVE = counter + 100000;
     private const int MAX_IMAGES_TO_SAVE_DEBUG = 10;
     private const int CAPTURE_FRAME_RATE = 30;
 
