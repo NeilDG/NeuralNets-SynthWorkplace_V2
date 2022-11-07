@@ -8,11 +8,13 @@ public class CameraNoShadowsBehavior : MonoBehaviour
     private Camera camera;
     private ShadowQuality _originalShadowSettings;
 
+    //private float originalAmbientIntensity;
     // or get it on runtime
     private void Awake()
     {
         // store original shadow settings
         _originalShadowSettings = QualitySettings.shadows;
+        //this.originalAmbientIntensity = RenderSettings.ambientIntensity;
         this.camera = this.GetComponent<Camera>();
     }
 
@@ -40,6 +42,7 @@ public class CameraNoShadowsBehavior : MonoBehaviour
         if (cam == this.camera)
         {
             QualitySettings.shadows = ShadowQuality.Disable;
+            //RenderSettings.ambientIntensity = 1.0f;
         }
     }
 
@@ -48,5 +51,7 @@ public class CameraNoShadowsBehavior : MonoBehaviour
     {
         // restore shadow settings
         QualitySettings.shadows = this._originalShadowSettings;
+        //RenderSettings.ambientIntensity = this.originalAmbientIntensity;
+        //RenderSettings.ambientIntensity = Random.Range(0.15f, 1.0f);
     }
 }
