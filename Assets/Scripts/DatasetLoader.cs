@@ -42,13 +42,13 @@ public class DatasetLoader
         //this.placesDatasetFiles = Directory.GetFiles("E:/Places Dataset/", "*.jpg");
 
         List<string> istdList = new List<string>();
-        int repeats = 50;
-        /*for (int i = 0; i < repeats; i++)
+        int repeats = 500;
+        for (int i = 0; i < repeats; i++)
         {
             string[] istdBaseList = Directory.GetFiles("E:/ISTD_Dataset/train/train_C/", "*.png");
             istdList.AddRange(istdBaseList);
-        }*/
-
+        }
+        
         for (int i = 0; i < repeats; i++)
         {
             string[] istdBaseList = Directory.GetFiles("E:/ISTD_Dataset/test/test_C/", "*.png");
@@ -68,14 +68,14 @@ public class DatasetLoader
     }
     public Texture2DTracker GetRandomImage()
     {
-        int key = this.currentKey; //iterate through each places image
-        this.currentKey++;
-        if (this.currentKey >= this.placesDatasetFiles.Length)
-        {
-            this.currentKey = 0;
-        }
+        // int key = this.currentKey; //iterate through each places image
+        // this.currentKey++;
+        // if (this.currentKey >= this.placesDatasetFiles.Length)
+        // {
+        //     this.currentKey = 0;
+        // }
 
-        //int key = Random.Range(0, this.placesDatasetFiles.Length); //randomly select image from places
+        int key = Random.Range(0, this.placesDatasetFiles.Length); //randomly select image from places
 
         if (this.loadedImages.ContainsKey(key))
         {

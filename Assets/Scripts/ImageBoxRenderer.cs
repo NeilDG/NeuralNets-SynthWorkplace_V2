@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering;
 
 public class ImageBoxRenderer : MonoBehaviour
 {
@@ -12,7 +13,7 @@ public class ImageBoxRenderer : MonoBehaviour
     [SerializeField] private float MAX_SCALE_Y = 25.0f;
 
     [SerializeField] private float MIN_SCALE_X = 5.0f;
-    [SerializeField] private float MAX_SCALE_X = 10.0f;
+    [SerializeField] private float MAX_SCALE_X = 80.0f;
 
     //private float ticks = 0.0f;
     private int frames = 0;
@@ -60,9 +61,9 @@ public class ImageBoxRenderer : MonoBehaviour
     {
         Transform objectTransform = this.baseRenderer.transform;
         Vector3 localScale = new Vector3(baseScale.x, baseScale.y, baseScale.z);
-        localScale.x += Random.Range(MIN_SCALE_X, MAX_SCALE_X);
+        localScale.x = Random.Range(MIN_SCALE_X, MAX_SCALE_X);
         localScale.y = Random.Range(MIN_SCALE_Y, MAX_SCALE_Y);
-        localScale.z += Random.Range(MIN_SCALE_X, MAX_SCALE_X);
+        localScale.z = Random.Range(MIN_SCALE_X, MAX_SCALE_X);
 
         Vector3 localPos = objectTransform.localPosition;
         localPos.y = ((localScale.y - MIN_SCALE_Y) / 2.0f) + 5.0f;
@@ -78,6 +79,8 @@ public class ImageBoxRenderer : MonoBehaviour
         this.matCount++;
 
         //destroy previous material
+        //GraphicsFormat graphicsFormat = this.baseRenderer.material.mainTexture.graphicsFormat;
+
         GameObject.Destroy(this.baseRenderer.material.mainTexture);
         GameObject.Destroy(this.baseRenderer.material);
         if (this.textureTracker != null)
@@ -86,19 +89,19 @@ public class ImageBoxRenderer : MonoBehaviour
             this.textureTracker = null;
         }
         
-        /*for (int i = 0; i < this.baseRenderer.materials.Length; i++)
+        for (int i = 0; i < this.baseRenderer.materials.Length; i++)
         {
             GameObject.Destroy(this.baseRenderer.materials[i]);
-        }*/
+        }
 
-        Color baseColor = baseMaterial.color;
-        baseColor.r = Random.Range(1.0f, 1.0f);
-        baseColor.g = Random.Range(1.0f, 1.0f);
-        baseColor.b = Random.Range(1.0f, 1.0f);
-        baseMaterial.color = baseColor;
-
-        baseMaterial.SetFloat("_Metallic", Random.Range(0.0f, 0.0f));
-        baseMaterial.SetFloat("_Glossiness", Random.Range(0.0f, 0.0f));
+        // Color baseColor = baseMaterial.color;
+        // baseColor.r = Random.Range(1.0f, 1.0f);
+        // baseColor.g = Random.Range(1.0f, 1.0f);
+        // baseColor.b = Random.Range(1.0f, 1.0f);
+        // baseMaterial.color = baseColor;
+        //
+        // baseMaterial.SetFloat("_Metallic", Random.Range(0.0f, 0.0f));
+        // baseMaterial.SetFloat("_Glossiness", Random.Range(0.0f, 0.0f));
 
         Texture mainTexture = new Texture2D(256, 256);
         this.textureTracker = DatasetLoader.GetInstance().GetRandomImage();

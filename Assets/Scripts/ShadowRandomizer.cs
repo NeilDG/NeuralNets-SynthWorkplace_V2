@@ -31,6 +31,27 @@ public class ShadowRandomizer : MonoBehaviour
 
     private Color[] rwLightColors;
 
+    public static float RandomGaussian(float minValue = 0.0f, float maxValue = 1.0f, float mean = 0.5f)
+    {
+        float u, v, S;
+
+        do
+        {
+            u = 2.0f * UnityEngine.Random.value - 1.0f;
+            v = 2.0f * UnityEngine.Random.value - 1.0f;
+            S = u * u + v * v;
+        }
+        while (S >= 1.0f);
+
+        // Standard Normal Distribution
+        float std = u * Mathf.Sqrt(-2.0f * Mathf.Log(S) / S);
+
+        // Normal Distribution centered between the min and max value
+        // and clamped following the "three-sigma rule"
+        float sigma = (maxValue - mean) / 3.0f;
+        return Mathf.Clamp(std * sigma + mean, minValue, maxValue);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -47,7 +68,7 @@ public class ShadowRandomizer : MonoBehaviour
 
     private void InitializeLightColors()
     {
-        this.rwLightColors = new Color[8];
+        this.rwLightColors = new Color[6];
         //from http://planetpixelemporium.com/tutorialpages/light.html
         this.rwLightColors[0].r = 255.0f/255.0f;
         this.rwLightColors[0].g = 197.0f/255.0f;
@@ -73,13 +94,13 @@ public class ShadowRandomizer : MonoBehaviour
         this.rwLightColors[5].g = 255.0f/255.0f;
         this.rwLightColors[5].b = 255.0f/255.0f;
 
-        this.rwLightColors[6].r = 201.0f/255.0f;
+        /*this.rwLightColors[6].r = 201.0f/255.0f;
         this.rwLightColors[6].g = 226.0f/255.0f;
         this.rwLightColors[6].b = 255.0f/255.0f;
 
         this.rwLightColors[7].r = 64.0f/255.0f;
         this.rwLightColors[7].g = 156.0f/255.0f;
-        this.rwLightColors[7].b = 255.0f/255.0f;
+        this.rwLightColors[7].b = 255.0f/255.0f;*/
 
     }
     private void StartRandomization()
@@ -127,12 +148,11 @@ public class ShadowRandomizer : MonoBehaviour
         rotAngles.x = Random.Range(MIN_ANGLE, MAX_ANGLE);
         rotAngles.y = Random.Range(MIN_ANGLE, MAX_ANGLE);
 
-        lightTransform.localEulerAngles = rotAngles;
+        //lightTransform.localEulerAngles = rotAngles;
 
         int randLight = Random.Range(0, this.rwLightColors.Length);
-        this.directionalLight.color = this.rwLightColors[randLight];
-
-        this.directionalLight.shadowStrength = Random.Range(0.2f, 1.0f);
+        //this.directionalLight.color = this.rwLightColors[randLight];
+        this.directionalLight.shadowStrength = Random.Range(0.25f, 0.9f);
         this.directionalLight.shadowNormalBias = Random.Range(0.4f, 2.5f);
 
     }
