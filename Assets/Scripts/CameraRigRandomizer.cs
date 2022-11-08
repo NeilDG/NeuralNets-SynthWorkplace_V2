@@ -7,6 +7,7 @@ public class CameraRigRandomizer : MonoBehaviour
 {
     private Transform cameraRig;
 
+    [SerializeField] private bool shouldRandomizeCamera = true;
     [SerializeField] private PostProcessVolume postProcessVolume;
     private PostProcessProfile postProcessProfile;
 
@@ -44,7 +45,11 @@ public class CameraRigRandomizer : MonoBehaviour
             this.RandomizeCamera();
         }*/
 
-        //this.RandomizeCamera();
+        if (this.shouldRandomizeCamera)
+        {
+            this.RandomizeCamera();
+        }
+        
         //this.RandomizePostProcess();
     }
 

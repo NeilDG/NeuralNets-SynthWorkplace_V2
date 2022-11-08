@@ -15,7 +15,6 @@ public class CameraRecordingV2 : MonoBehaviour
 {
     [SerializeField] private Camera cameraWithShadows;
     [SerializeField] private Camera cameraNoShadows;
-
     private const string BASE_PATH = "E:/SynthWeather Dataset 10_2/";
 
     public static int SAVE_EVERY_FRAME = 1;

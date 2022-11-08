@@ -79,7 +79,7 @@ public class ImageBoxRenderer : MonoBehaviour
         this.matCount++;
 
         //destroy previous material
-        GraphicsFormat graphicsFormat = this.baseRenderer.material.mainTexture.graphicsFormat;
+        //GraphicsFormat graphicsFormat = this.baseRenderer.material.mainTexture.graphicsFormat;
 
         GameObject.Destroy(this.baseRenderer.material.mainTexture);
         GameObject.Destroy(this.baseRenderer.material);
