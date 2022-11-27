@@ -105,35 +105,33 @@ public class ShadowRandomizer : MonoBehaviour
     }
     private void StartRandomization()
     {
+        const float NUM_PRIMITIVES = 10;
         for (int i = 0; i < objectList.Length; i++)
         {
-            float chance = Random.Range(0.0f, 1.0f);
+            this.objectList[i].gameObject.SetActive(false);
+        }
 
-            if (chance < 0.5f)
-            {
-                this.objectList[i].gameObject.SetActive(false);
-            }
-            else
-            {
-                this.objectList[i].gameObject.SetActive(true);
-                Vector3 pos = this.objectList[i].localPosition;
-                Vector3 rotAngles = this.objectList[i].localEulerAngles;
-                Vector3 scale = this.objectList[i].localScale;
+        for (int i = 0; i < NUM_PRIMITIVES; i++)
+        {
+            this.objectList[i].gameObject.SetActive(true);
+            Vector3 pos = this.objectList[i].localPosition;
+            Vector3 rotAngles = this.objectList[i].localEulerAngles;
+            Vector3 scale = this.objectList[i].localScale;
 
-                pos.x = Random.Range(MIN_POS_X, MAX_POS_X);
-                pos.y = Random.Range(MIN_POS_Y, MAX_POS_Y);
+            pos.x = Random.Range(MIN_POS_X, MAX_POS_X);
+            pos.y = Random.Range(MIN_POS_Y, MAX_POS_Y);
 
-                scale.x = Random.Range(MIN_SCALE_X, MAX_SCALE_X) / 2.0f;
-                scale.y = Random.Range(MIN_SCALE_Y, MAX_SCALE_Y) / 2.0f;
+            scale.x = Random.Range(MIN_SCALE_X, MAX_SCALE_X);
+            scale.y = Random.Range(MIN_SCALE_Y, MAX_SCALE_Y);
 
-                rotAngles.x = Random.Range(MIN_ROT_VERTICAL, MAX_ROT_VERTICAL);
-                rotAngles.y = Random.Range(MIN_ROT_HORIZONTAL, MAX_ROT_HORIZONTAL);
-                rotAngles.z = Random.Range(MIN_ROT_VERTICAL, MAX_ROT_VERTICAL);
+            rotAngles.x = Random.Range(MIN_ROT_VERTICAL, MAX_ROT_VERTICAL);
+            rotAngles.y = Random.Range(MIN_ROT_HORIZONTAL, MAX_ROT_HORIZONTAL);
+            rotAngles.z = Random.Range(MIN_ROT_VERTICAL, MAX_ROT_VERTICAL);
 
-                this.objectList[i].localPosition = pos;
-                this.objectList[i].localEulerAngles = rotAngles;
-                this.objectList[i].localScale = scale;
-            }
+            this.objectList[i].localPosition = pos;
+            this.objectList[i].localEulerAngles = rotAngles;
+            this.objectList[i].localScale = scale;
+            
         }
     }
 
@@ -141,6 +139,14 @@ public class ShadowRandomizer : MonoBehaviour
     {
         const float MIN_ANGLE = 15.0f;
         const float MAX_ANGLE = 170.0f;
+
+        const float SHADOW_MIN_STRENGTH = 0.4f;
+        const float SHADOW_MAX_STRENGTH = 0.95f;
+        const float AMBIENT_INTENSITY = 0.25f;
+        //
+        // const float SHADOW_MIN_STRENGTH = 0.1f;
+        // const float SHADOW_MAX_STRENGTH = 0.95f;
+        // const float AMBIENT_INTENSITY = 0.1f;
 
         Transform lightTransform = this.directionalLight.transform;
         Vector3 rotAngles = lightTransform.localEulerAngles;
@@ -151,9 +157,9 @@ public class ShadowRandomizer : MonoBehaviour
         //lightTransform.localEulerAngles = rotAngles;
 
         int randLight = Random.Range(0, this.rwLightColors.Length);
-        //this.directionalLight.color = this.rwLightColors[randLight];
-        this.directionalLight.shadowStrength = Random.Range(0.25f, 0.9f);
+        this.directionalLight.color = this.rwLightColors[randLight];
+        RenderSettings.ambientLight = this.directionalLight.color * AMBIENT_INTENSITY;
+        this.directionalLight.shadowStrength = Random.Range(SHADOW_MIN_STRENGTH, SHADOW_MAX_STRENGTH);
         this.directionalLight.shadowNormalBias = Random.Range(0.4f, 2.5f);
-
     }
 }

@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class DatasetLoader
@@ -39,22 +38,31 @@ public class DatasetLoader
 
     private DatasetLoader()
     {
-        //this.placesDatasetFiles = Directory.GetFiles("E:/Places Dataset/", "*.jpg");
+        this.placesDatasetFiles = Directory.GetFiles("E:/Places Dataset/", "*.jpg");
 
-        List<string> istdList = new List<string>();
-        int repeats = 500;
-        for (int i = 0; i < repeats; i++)
-        {
-            string[] istdBaseList = Directory.GetFiles("E:/ISTD_Dataset/train/train_C/", "*.png");
-            istdList.AddRange(istdBaseList);
-        }
-        
-        for (int i = 0; i < repeats; i++)
-        {
-            string[] istdBaseList = Directory.GetFiles("E:/ISTD_Dataset/test/test_C/", "*.png");
-            istdList.AddRange(istdBaseList);
-        }
-        this.placesDatasetFiles = istdList.ToArray();
+        // List<string> istdList = new List<string>();
+        // int repeats = 500;
+        // for (int i = 0; i < repeats; i++)
+        // {
+        //     string[] istdBaseList = Directory.GetFiles("E:/ISTD_Dataset/train/train_C/", "*.png");
+        //     istdList.AddRange(istdBaseList);
+        // }
+        //
+        // for (int i = 0; i < repeats; i++)
+        // {
+        //     string[] istdBaseList = Directory.GetFiles("E:/ISTD_Dataset/test/test_C/", "*.png");
+        //     istdList.AddRange(istdBaseList);
+        // }
+        // this.placesDatasetFiles = istdList.ToArray();
+
+        // List<string> srdList = new List<string>();
+        // int repeats = 500;
+        // for (int i = 0; i < repeats; i++)
+        // {
+        //     string[] baseList = Directory.GetFiles("E:/SRD_Train/shadow_free/", "*.jpg");
+        //     srdList.AddRange(baseList);
+        // }
+        // this.placesDatasetFiles = srdList.ToArray();
 
         this.currentKey = CameraRecordingV2.counter % this.placesDatasetFiles.Length;
         Debug.Log("Set image ID to:" + this.currentKey);

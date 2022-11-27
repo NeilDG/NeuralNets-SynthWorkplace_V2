@@ -8,4 +8,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SynthPlacesScene.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 0
+    path: Assets/Scenes/ISTDTestScene.unity
+    guid: b6e788dd65748e841b15691cc2b09e3c
   m_configObjects: {}
