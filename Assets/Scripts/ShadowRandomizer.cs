@@ -105,7 +105,7 @@ public class ShadowRandomizer : MonoBehaviour
     }
     private void StartRandomization()
     {
-        const float NUM_PRIMITIVES = 10;
+        const float NUM_PRIMITIVES = 20;
         for (int i = 0; i < objectList.Length; i++)
         {
             this.objectList[i].gameObject.SetActive(false);
@@ -140,13 +140,13 @@ public class ShadowRandomizer : MonoBehaviour
         const float MIN_ANGLE = 15.0f;
         const float MAX_ANGLE = 170.0f;
 
-        const float SHADOW_MIN_STRENGTH = 0.4f;
-        const float SHADOW_MAX_STRENGTH = 0.95f;
-        const float AMBIENT_INTENSITY = 0.25f;
-        //
-        // const float SHADOW_MIN_STRENGTH = 0.1f;
+        // const float SHADOW_MIN_STRENGTH = 0.4f;
         // const float SHADOW_MAX_STRENGTH = 0.95f;
-        // const float AMBIENT_INTENSITY = 0.1f;
+        // const float AMBIENT_INTENSITY = 0.25f;
+        
+        const float SHADOW_MIN_STRENGTH = 0.1f;
+        const float SHADOW_MAX_STRENGTH = 0.95f;
+        const float AMBIENT_INTENSITY = 0.1f;
 
         Transform lightTransform = this.directionalLight.transform;
         Vector3 rotAngles = lightTransform.localEulerAngles;
