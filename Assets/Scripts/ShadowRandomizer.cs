@@ -1,12 +1,17 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
 using UnityEngine;
+using Random = UnityEngine.Random;
 using Vector3 = UnityEngine.Vector3;
 
 public class ShadowRandomizer : MonoBehaviour
 {
-    [SerializeField] private Transform[] objectList;
+    [SerializeField] private Transform[] cubeList;
+    [SerializeField] private Transform[] prismList;
+    [SerializeField] private Transform[] sphereList;
+
     [SerializeField] private Light directionalLight;
 
     [SerializeField] private float MIN_POS_X = -7.0f;
@@ -30,6 +35,11 @@ public class ShadowRandomizer : MonoBehaviour
     private float ticks = 0.0f;
 
     private Color[] rwLightColors;
+
+    private enum PrimitiveGroup
+    {
+        CUBE = 0, PRISM = 1, SPHERE = 2
+    }
 
     public static float RandomGaussian(float minValue = 0.0f, float maxValue = 1.0f, float mean = 0.5f)
     {
@@ -105,18 +115,50 @@ public class ShadowRandomizer : MonoBehaviour
     }
     private void StartRandomization()
     {
-        const float NUM_PRIMITIVES = 20;
-        for (int i = 0; i < objectList.Length; i++)
+        int[] NUM_PRIMITIVES = new int[]{0, 0, 20}; //cubes, prisms, spheres
+
+        for (int i = 0; i < cubeList.Length; i++)
         {
-            this.objectList[i].gameObject.SetActive(false);
+            this.cubeList[i].gameObject.SetActive(false);
         }
 
-        for (int i = 0; i < NUM_PRIMITIVES; i++)
+        for (int i = 0; i < cubeList.Length; i++)
         {
-            this.objectList[i].gameObject.SetActive(true);
-            Vector3 pos = this.objectList[i].localPosition;
-            Vector3 rotAngles = this.objectList[i].localEulerAngles;
-            Vector3 scale = this.objectList[i].localScale;
+            this.prismList[i].gameObject.SetActive(false);
+        }
+
+        for (int i = 0; i < cubeList.Length; i++)
+        {
+            this.sphereList[i].gameObject.SetActive(false);
+        }
+
+        this.RandomizePrimitiveGroup(PrimitiveGroup.CUBE, NUM_PRIMITIVES[(int) PrimitiveGroup.CUBE]);
+        this.RandomizePrimitiveGroup(PrimitiveGroup.PRISM, NUM_PRIMITIVES[(int)PrimitiveGroup.PRISM]);
+        this.RandomizePrimitiveGroup(PrimitiveGroup.SPHERE, NUM_PRIMITIVES[(int)PrimitiveGroup.SPHERE]);
+    }
+
+    private void RandomizePrimitiveGroup(PrimitiveGroup primitiveGroup, int numPrimitives)
+    {
+        Transform[] primitiveList;
+        if (primitiveGroup == PrimitiveGroup.SPHERE)
+        {
+            primitiveList = this.sphereList;
+        }
+        else if (primitiveGroup == PrimitiveGroup.PRISM)
+        {
+            primitiveList = this.prismList;
+        }
+        else
+        {
+            primitiveList = this.cubeList;
+        }
+
+        for (int i = 0; i < numPrimitives; i++)
+        {
+            primitiveList[i].gameObject.SetActive(true);
+            Vector3 pos = primitiveList[i].localPosition;
+            Vector3 rotAngles = primitiveList[i].localEulerAngles;
+            Vector3 scale = primitiveList[i].localScale;
 
             pos.x = Random.Range(MIN_POS_X, MAX_POS_X);
             pos.y = Random.Range(MIN_POS_Y, MAX_POS_Y);
@@ -128,10 +170,10 @@ public class ShadowRandomizer : MonoBehaviour
             rotAngles.y = Random.Range(MIN_ROT_HORIZONTAL, MAX_ROT_HORIZONTAL);
             rotAngles.z = Random.Range(MIN_ROT_VERTICAL, MAX_ROT_VERTICAL);
 
-            this.objectList[i].localPosition = pos;
-            this.objectList[i].localEulerAngles = rotAngles;
-            this.objectList[i].localScale = scale;
-            
+            primitiveList[i].localPosition = pos;
+            primitiveList[i].localEulerAngles = rotAngles;
+            primitiveList[i].localScale = scale;
+
         }
     }
 
@@ -143,11 +185,12 @@ public class ShadowRandomizer : MonoBehaviour
         // const float SHADOW_MIN_STRENGTH = 0.4f;
         // const float SHADOW_MAX_STRENGTH = 0.95f;
         // const float AMBIENT_INTENSITY = 0.25f;
-        
+
         const float SHADOW_MIN_STRENGTH = 0.1f;
         const float SHADOW_MAX_STRENGTH = 0.95f;
         const float AMBIENT_INTENSITY = 0.1f;
 
+        Debug.Log("<b> Shadow parameters. Min Str: " + SHADOW_MIN_STRENGTH + " Max Str: " + SHADOW_MAX_STRENGTH + " Ambient Intensity: " +AMBIENT_INTENSITY + "</b>");
         Transform lightTransform = this.directionalLight.transform;
         Vector3 rotAngles = lightTransform.localEulerAngles;
 
