@@ -1,16 +1,11 @@
+#if UNITY_EDITOR
+
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
-using System.Threading;
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.SceneManagement;
-using UnityEngine.SceneManagement;
 using Debug = UnityEngine.Debug;
 using Object = UnityEngine.Object;
-
 
 public class AutomatedBakingScript : MonoBehaviour
 {
@@ -289,3 +284,4 @@ public class AutomatedBakingScript : MonoBehaviour
         }
     }
 }
+#endif
