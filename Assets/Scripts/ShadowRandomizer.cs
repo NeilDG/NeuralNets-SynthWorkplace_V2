@@ -11,6 +11,7 @@ public class ShadowRandomizer : MonoBehaviour
     [SerializeField] private Transform[] cubeList;
     [SerializeField] private Transform[] prismList;
     [SerializeField] private Transform[] sphereList;
+    [SerializeField] private Transform[] capsuleList;
 
     [SerializeField] private Light directionalLight;
 
@@ -38,7 +39,7 @@ public class ShadowRandomizer : MonoBehaviour
 
     private enum PrimitiveGroup
     {
-        CUBE = 0, PRISM = 1, SPHERE = 2
+        CUBE = 0, PRISM = 1, SPHERE = 2, CAPSULE = 3
     }
 
     public static float RandomGaussian(float minValue = 0.0f, float maxValue = 1.0f, float mean = 0.5f)
@@ -115,26 +116,32 @@ public class ShadowRandomizer : MonoBehaviour
     }
     private void StartRandomization()
     {
-        int[] NUM_PRIMITIVES = new int[]{0, 0, 20}; //cubes, prisms, spheres
+        int[] NUM_PRIMITIVES = new int[]{10, 10, 0, 10}; //cubes, prisms, spheres, capsules,
 
         for (int i = 0; i < cubeList.Length; i++)
         {
             this.cubeList[i].gameObject.SetActive(false);
         }
 
-        for (int i = 0; i < cubeList.Length; i++)
+        for (int i = 0; i < prismList.Length; i++)
         {
             this.prismList[i].gameObject.SetActive(false);
         }
 
-        for (int i = 0; i < cubeList.Length; i++)
+        for (int i = 0; i < sphereList.Length; i++)
         {
             this.sphereList[i].gameObject.SetActive(false);
+        }
+
+        for (int i = 0; i < capsuleList.Length; i++)
+        {
+            this.capsuleList[i].gameObject.SetActive(false);
         }
 
         this.RandomizePrimitiveGroup(PrimitiveGroup.CUBE, NUM_PRIMITIVES[(int) PrimitiveGroup.CUBE]);
         this.RandomizePrimitiveGroup(PrimitiveGroup.PRISM, NUM_PRIMITIVES[(int)PrimitiveGroup.PRISM]);
         this.RandomizePrimitiveGroup(PrimitiveGroup.SPHERE, NUM_PRIMITIVES[(int)PrimitiveGroup.SPHERE]);
+        this.RandomizePrimitiveGroup(PrimitiveGroup.CAPSULE, NUM_PRIMITIVES[(int)PrimitiveGroup.CAPSULE]);
     }
 
     private void RandomizePrimitiveGroup(PrimitiveGroup primitiveGroup, int numPrimitives)
@@ -147,6 +154,10 @@ public class ShadowRandomizer : MonoBehaviour
         else if (primitiveGroup == PrimitiveGroup.PRISM)
         {
             primitiveList = this.prismList;
+        }
+        else if (primitiveGroup == PrimitiveGroup.CAPSULE)
+        {
+            primitiveList = this.capsuleList;
         }
         else
         {
@@ -182,13 +193,13 @@ public class ShadowRandomizer : MonoBehaviour
         const float MIN_ANGLE = 15.0f;
         const float MAX_ANGLE = 170.0f;
 
-        // const float SHADOW_MIN_STRENGTH = 0.4f;
-        // const float SHADOW_MAX_STRENGTH = 0.95f;
-        // const float AMBIENT_INTENSITY = 0.25f;
-
-        const float SHADOW_MIN_STRENGTH = 0.1f;
+        const float SHADOW_MIN_STRENGTH = 0.4f;
         const float SHADOW_MAX_STRENGTH = 0.95f;
-        const float AMBIENT_INTENSITY = 0.1f;
+        const float AMBIENT_INTENSITY = 0.25f;
+
+        // const float SHADOW_MIN_STRENGTH = 0.1f;
+        // const float SHADOW_MAX_STRENGTH = 0.95f;
+        // const float AMBIENT_INTENSITY = 0.1f;
 
         Debug.Log("<b> Shadow parameters. Min Str: " + SHADOW_MIN_STRENGTH + " Max Str: " + SHADOW_MAX_STRENGTH + " Ambient Intensity: " +AMBIENT_INTENSITY + "</b>");
         Transform lightTransform = this.directionalLight.transform;

@@ -55,7 +55,7 @@ public class SynShadowRandomizer : MonoBehaviour
         pos.x = Random.Range(MIN_POS_X, MAX_POS_X);
         pos.y = Random.Range(MIN_POS_Y, MAX_POS_Y);
 
-        rotAngles.z = Random.Range(MIN_ANGLE, MAX_ANGLE);
+        //rotAngles.z = Random.Range(MIN_ANGLE, MAX_ANGLE);
 
         this.spriteRenderer.transform.localPosition = pos;
         this.spriteRenderer.transform.localEulerAngles = rotAngles;

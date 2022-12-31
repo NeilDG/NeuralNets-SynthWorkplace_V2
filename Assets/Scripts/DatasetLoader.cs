@@ -124,8 +124,8 @@ public class DatasetLoader
 
     public Sprite GetRandomSprite()
     {
-        // int key = Random.Range(0, this.synShadowFiles.Length); //randomly select image from synshadows
-        int key = Random.Range(0, 10); //randomly select image from synshadows
+        int key = Random.Range(0, this.synShadowFiles.Length); //randomly select image from synshadows
+        //int key = Random.Range(0, 10); //randomly select image from synshadows
 
         //if capacity is full, unload 1 random image in dictionary
         Resources.UnloadUnusedAssets();
