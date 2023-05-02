@@ -53,19 +53,13 @@ public class DatasetLoader
 
     private DatasetLoader()
     {
-        this.placesDatasetFiles = Directory.GetFiles("E:/Places Dataset/", "*.jpg");
+        this.placesDatasetFiles = Directory.GetFiles("X:/Places Dataset/", "*.jpg");
 
         // List<string> istdList = new List<string>();
         // int repeats = 500;
         // for (int i = 0; i < repeats; i++)
         // {
-        //     string[] istdBaseList = Directory.GetFiles("E:/ISTD_Dataset/train/train_C/", "*.png");
-        //     istdList.AddRange(istdBaseList);
-        // }
-        //
-        // for (int i = 0; i < repeats; i++)
-        // {
-        //     string[] istdBaseList = Directory.GetFiles("E:/ISTD_Dataset/test/test_C/", "*.png");
+        //     string[] istdBaseList = Directory.GetFiles("X:/ISTD_Dataset/test/test_C/", "*.png");
         //     istdList.AddRange(istdBaseList);
         // }
         // this.placesDatasetFiles = istdList.ToArray();
@@ -78,6 +72,15 @@ public class DatasetLoader
         //     srdList.AddRange(baseList);
         // }
         // this.placesDatasetFiles = srdList.ToArray();
+
+        // List<string> usrList = new List<string>();
+        // int repeats = 500;
+        // for (int i = 0; i < repeats; i++)
+        // {
+        //     string[] baseList = Directory.GetFiles("E:/USR Shadow Dataset/shadow_free/", "*.jpg");
+        //     usrList.AddRange(baseList);
+        // }
+        // this.placesDatasetFiles = usrList.ToArray();
 
         this.currentKey = CameraRecordingV2.counter % this.placesDatasetFiles.Length;
         Debug.Log("Set image ID to:" + this.currentKey);

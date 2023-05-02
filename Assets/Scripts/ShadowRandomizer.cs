@@ -8,10 +8,16 @@ using Vector3 = UnityEngine.Vector3;
 
 public class ShadowRandomizer : MonoBehaviour
 {
-    [SerializeField] private Transform[] cubeList;
-    [SerializeField] private Transform[] prismList;
-    [SerializeField] private Transform[] sphereList;
-    [SerializeField] private Transform[] capsuleList;
+    // [SerializeField] private Transform[] cubeList;
+    // [SerializeField] private Transform[] prismList;
+    // [SerializeField] private Transform[] sphereList;
+    // [SerializeField] private Transform[] capsuleList;
+
+    [SerializeField] private GameObject cubeRef;
+    [SerializeField] private GameObject prismRef;
+    [SerializeField] private GameObject sphereRef;
+    [SerializeField] private GameObject capsuleRef;
+    [SerializeField] private List<GameObject> primitives = new List<GameObject>();
 
     [SerializeField] private Light directionalLight;
 
@@ -67,14 +73,20 @@ public class ShadowRandomizer : MonoBehaviour
     void Start()
     {
         //Random.InitState(1);
+        this.InitializeLightColors();
+        this.InitializePrimitives();
     }
 
     // Update is called once per frame
     void Update()
     {
-        this.InitializeLightColors();
-        this.StartRandomization();
+        this.RandomizeAllPrimitives();
         this.RandomizeLightDirection();
+    }
+
+    void OnDestroy()
+    {
+        this.primitives.Clear();
     }
 
     private void InitializeLightColors()
@@ -114,62 +126,84 @@ public class ShadowRandomizer : MonoBehaviour
         this.rwLightColors[7].b = 255.0f/255.0f;*/
 
     }
-    private void StartRandomization()
+    private void InitializePrimitives()
     {
-        int[] NUM_PRIMITIVES = new int[]{10, 10, 0, 10}; //cubes, prisms, spheres, capsules,
+        int[] NUM_PRIMITIVES = ShadowParameters.PRIMITIVE_SETS;
+        
+        this.cubeRef.gameObject.SetActive(false);
+        this.prismRef.gameObject.SetActive(false);
+        this.sphereRef.gameObject.SetActive(false);
+        this.capsuleRef.gameObject.SetActive(false);
 
-        for (int i = 0; i < cubeList.Length; i++)
-        {
-            this.cubeList[i].gameObject.SetActive(false);
-        }
-
-        for (int i = 0; i < prismList.Length; i++)
-        {
-            this.prismList[i].gameObject.SetActive(false);
-        }
-
-        for (int i = 0; i < sphereList.Length; i++)
-        {
-            this.sphereList[i].gameObject.SetActive(false);
-        }
-
-        for (int i = 0; i < capsuleList.Length; i++)
-        {
-            this.capsuleList[i].gameObject.SetActive(false);
-        }
-
-        this.RandomizePrimitiveGroup(PrimitiveGroup.CUBE, NUM_PRIMITIVES[(int) PrimitiveGroup.CUBE]);
-        this.RandomizePrimitiveGroup(PrimitiveGroup.PRISM, NUM_PRIMITIVES[(int)PrimitiveGroup.PRISM]);
-        this.RandomizePrimitiveGroup(PrimitiveGroup.SPHERE, NUM_PRIMITIVES[(int)PrimitiveGroup.SPHERE]);
-        this.RandomizePrimitiveGroup(PrimitiveGroup.CAPSULE, NUM_PRIMITIVES[(int)PrimitiveGroup.CAPSULE]);
+        this.InitializePrimitiveGroup(PrimitiveGroup.CUBE, NUM_PRIMITIVES[(int) PrimitiveGroup.CUBE]);
+        this.InitializePrimitiveGroup(PrimitiveGroup.PRISM, NUM_PRIMITIVES[(int)PrimitiveGroup.PRISM]);
+        this.InitializePrimitiveGroup(PrimitiveGroup.SPHERE, NUM_PRIMITIVES[(int)PrimitiveGroup.SPHERE]);
+        // this.InitializePrimitiveGroup(PrimitiveGroup.CAPSULE, NUM_PRIMITIVES[(int)PrimitiveGroup.CAPSULE]);
     }
 
-    private void RandomizePrimitiveGroup(PrimitiveGroup primitiveGroup, int numPrimitives)
+    private void InitializePrimitiveGroup(PrimitiveGroup primitiveGroup, int numPrimitives)
     {
-        Transform[] primitiveList;
-        if (primitiveGroup == PrimitiveGroup.SPHERE)
+
+        GameObject primitive = null;
+        if (primitiveGroup == PrimitiveGroup.CUBE)
         {
-            primitiveList = this.sphereList;
+            primitive = this.cubeRef;
         }
         else if (primitiveGroup == PrimitiveGroup.PRISM)
         {
-            primitiveList = this.prismList;
+            primitive = this.prismRef;
+        }
+        else if (primitiveGroup == PrimitiveGroup.SPHERE)
+        {
+            primitive = this.sphereRef;
         }
         else if (primitiveGroup == PrimitiveGroup.CAPSULE)
         {
-            primitiveList = this.capsuleList;
+            primitive = this.capsuleRef;
         }
         else
         {
-            primitiveList = this.cubeList;
+            Debug.LogError("Unidentified primitive! Skipping");
+            return;
         }
 
+       
         for (int i = 0; i < numPrimitives; i++)
         {
-            primitiveList[i].gameObject.SetActive(true);
-            Vector3 pos = primitiveList[i].localPosition;
-            Vector3 rotAngles = primitiveList[i].localEulerAngles;
-            Vector3 scale = primitiveList[i].localScale;
+            GameObject primitiveInstance = GameObject.Instantiate(primitive);
+            primitiveInstance.transform.SetParent(this.transform);
+            primitiveInstance.gameObject.SetActive(true);
+
+            Vector3 pos = primitive.transform.localPosition;
+            Vector3 rotAngles = primitive.transform.localEulerAngles;
+            Vector3 scale = primitive.transform.localScale;
+
+            pos.x = Random.Range(MIN_POS_X, MAX_POS_X);
+            pos.y = Random.Range(MIN_POS_Y, MAX_POS_Y);
+            
+            scale.x = Random.Range(MIN_SCALE_X, MAX_SCALE_X);
+            scale.y = Random.Range(MIN_SCALE_Y, MAX_SCALE_Y);
+            
+            rotAngles.x = Random.Range(MIN_ROT_VERTICAL, MAX_ROT_VERTICAL);
+            rotAngles.y = Random.Range(MIN_ROT_HORIZONTAL, MAX_ROT_HORIZONTAL);
+            rotAngles.z = Random.Range(MIN_ROT_VERTICAL, MAX_ROT_VERTICAL);
+
+            primitiveInstance.transform.localPosition = pos;
+            primitiveInstance.transform.localEulerAngles = rotAngles;
+            primitiveInstance.transform.localScale = scale;
+
+            this.primitives.Add(primitiveInstance);
+        }
+    }
+
+    private void RandomizeAllPrimitives()
+    {
+        for (int i = 0; i < this.primitives.Count; i++)
+        {
+            GameObject primitiveInstance = this.primitives[i];
+            Vector3 pos = primitiveInstance.transform.localPosition;
+            Vector3 rotAngles = primitiveInstance.transform.localEulerAngles;
+            Vector3 scale = primitiveInstance.transform.localScale;
 
             pos.x = Random.Range(MIN_POS_X, MAX_POS_X);
             pos.y = Random.Range(MIN_POS_Y, MAX_POS_Y);
@@ -181,10 +215,9 @@ public class ShadowRandomizer : MonoBehaviour
             rotAngles.y = Random.Range(MIN_ROT_HORIZONTAL, MAX_ROT_HORIZONTAL);
             rotAngles.z = Random.Range(MIN_ROT_VERTICAL, MAX_ROT_VERTICAL);
 
-            primitiveList[i].localPosition = pos;
-            primitiveList[i].localEulerAngles = rotAngles;
-            primitiveList[i].localScale = scale;
-
+            primitiveInstance.transform.localPosition = pos;
+            primitiveInstance.transform.localEulerAngles = rotAngles;
+            primitiveInstance.transform.localScale = scale;
         }
     }
 
@@ -193,27 +226,20 @@ public class ShadowRandomizer : MonoBehaviour
         const float MIN_ANGLE = 15.0f;
         const float MAX_ANGLE = 170.0f;
 
-        const float SHADOW_MIN_STRENGTH = 0.4f;
-        const float SHADOW_MAX_STRENGTH = 0.95f;
-        const float AMBIENT_INTENSITY = 0.25f;
-
-        // const float SHADOW_MIN_STRENGTH = 0.1f;
-        // const float SHADOW_MAX_STRENGTH = 0.95f;
-        // const float AMBIENT_INTENSITY = 0.1f;
-
-        Debug.Log("<b> Shadow parameters. Min Str: " + SHADOW_MIN_STRENGTH + " Max Str: " + SHADOW_MAX_STRENGTH + " Ambient Intensity: " +AMBIENT_INTENSITY + "</b>");
         Transform lightTransform = this.directionalLight.transform;
         Vector3 rotAngles = lightTransform.localEulerAngles;
 
         rotAngles.x = Random.Range(MIN_ANGLE, MAX_ANGLE);
         rotAngles.y = Random.Range(MIN_ANGLE, MAX_ANGLE);
 
-        //lightTransform.localEulerAngles = rotAngles;
+        // lightTransform.localEulerAngles = rotAngles;
 
         int randLight = Random.Range(0, this.rwLightColors.Length);
         this.directionalLight.color = this.rwLightColors[randLight];
-        RenderSettings.ambientLight = this.directionalLight.color * AMBIENT_INTENSITY;
-        this.directionalLight.shadowStrength = Random.Range(SHADOW_MIN_STRENGTH, SHADOW_MAX_STRENGTH);
+        RenderSettings.ambientLight = Color.white * MathF.Round(Random.Range(ShadowParameters.MIN_AMBIENT_INTENSITY, ShadowParameters.MAX_AMBIENT_INTENSITY), 4);
+        this.directionalLight.shadowStrength = MathF.Round(Random.Range(ShadowParameters.SHADOW_MIN_STRENGTH, ShadowParameters.SHADOW_MAX_STRENGTH), 4);
         this.directionalLight.shadowNormalBias = Random.Range(0.4f, 2.5f);
+
+        Debug.Log("<b> Shadow parameters: " + this.directionalLight.shadowStrength + " Ambient Intensity: " + RenderSettings.ambientLight + "</b>");
     }
 }
