@@ -9,13 +9,13 @@ public class ShadowParameters
     // public const int REFRESH_SCENE_PER_FRAME = 3; //for SynthInoueScene
     public const int REFRESH_SCENE_PER_FRAME = 3000;
 
-    public const int MAX_IMAGES_TO_SAVE = 10000; //for DEBUG
-    // public const int MAX_IMAGES_TO_SAVE = 150000;
+    // public const int MAX_IMAGES_TO_SAVE = 10000; //for DEBUG
+    public const int MAX_IMAGES_TO_SAVE = 200000;
 
-    public const string BASE_PATH = "X:/SynthWeather Dataset 10/v71_places/";
+    public const string BASE_PATH = "X:/SynthWeather Dataset 10/v69_places/";
     // public const string BASE_PATH = "X:/SynthWeather Dataset 10_2/";
 
-    public static readonly int[] PRIMITIVE_SETS = {150, 0, 0, 0}; //cubes, prisms, spheres, capsules,
+    public static readonly int[] PRIMITIVE_SETS = {0, 150, 150, 0}; //cubes, prisms, spheres, capsules
 
     public const float SHADOW_MIN_STRENGTH = 0.4f;
     public const float SHADOW_MAX_STRENGTH = 0.95f;

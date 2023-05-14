@@ -74,6 +74,8 @@ crashlytics-build.properties
 Assets/Fantastic City Generator/
 Imported
 Assets/FCG/
-Assets/Scenes/
+Assets/Scenes/*/
 Assets/Resources/SynShadow/
 SynthGenerator/
+SynthGenerator-2/
+SynthGenerator-3/

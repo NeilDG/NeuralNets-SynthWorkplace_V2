@@ -68,7 +68,7 @@ public class DatasetLoader
         // int repeats = 500;
         // for (int i = 0; i < repeats; i++)
         // {
-        //     string[] baseList = Directory.GetFiles("E:/SRD_Train/shadow_free/", "*.jpg");
+        //     string[] baseList = Directory.GetFiles("X:/SRD_Train/shadow_free/", "*.jpg");
         //     srdList.AddRange(baseList);
         // }
         // this.placesDatasetFiles = srdList.ToArray();

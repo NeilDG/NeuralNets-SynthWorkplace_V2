@@ -106,7 +106,12 @@ public class SynShadowRandomizer : MonoBehaviour
 
     private void RandomizeLightDirection()
     {
-        const float MIN_ANGLE = 15.0f;
+        if (this.directionalLight == null)
+        {
+            return;
+        }
+
+        const float MIN_ANGLE = 15.0f; 
         const float MAX_ANGLE = 170.0f;
         const float AMBIENT_INTENSITY = 0.1f;
 
