@@ -49,7 +49,7 @@ public class ImageBoxRenderer : MonoBehaviour
         this.frames++;
         this.RandomizeScale();
 
-        if (this.frames % CameraRecordingV2.REFRESH_SCENE_PER_FRAME == 0)
+        if (this.frames % ShadowParameters.REFRESH_SCENE_PER_FRAME == 0)
         {
             this.frames = 0;
             this.RandomizeMaterial();

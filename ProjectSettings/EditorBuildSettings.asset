@@ -8,7 +8,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/SynthPlacesScene_SynShadow.unity
     guid: 741ca78081217874ab476a56802dee13
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/SynthPlacesScene.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 0
@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/SynthInuoeScene_SynShadow.unity
     guid: ef97c0e4d0a87254781a573d12ef99f8
+  - enabled: 1
+    path: Assets/Scenes/SynthPlacesScene2.unity
+    guid: b22cb600a5f7ad54487746fcb9c1449a
   m_configObjects: {}

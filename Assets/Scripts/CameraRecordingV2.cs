@@ -16,7 +16,7 @@ public class CameraRecordingV2 : MonoBehaviour
     private const string BASE_PATH = ShadowParameters.BASE_PATH;
 
     public static int SAVE_EVERY_FRAME = 1;
-    public static readonly int REFRESH_SCENE_PER_FRAME = ShadowParameters.REFRESH_SCENE_PER_FRAME;
+    private static readonly int REFRESH_SCENE_PER_FRAME = ShadowParameters.REFRESH_SCENE_PER_FRAME;
 
     private long frames = 0;
     public static int counter = 0;

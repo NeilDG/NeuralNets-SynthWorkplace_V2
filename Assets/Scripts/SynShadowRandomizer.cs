@@ -30,7 +30,8 @@ public class SynShadowRandomizer : MonoBehaviour
     {
         this.RandomizeLightDirection();
         this.RandomizeShadowMatteTransform();
-        if (this.frames % CameraRecordingV2.REFRESH_SCENE_PER_FRAME == 0)
+        this.frames++;
+        if (this.frames % ShadowParameters.REFRESH_3D_MODEL_PER_FRAME == 0)
         {
             this.frames = 0;
             this.RandomizeShadowMatte();
@@ -55,15 +56,13 @@ public class SynShadowRandomizer : MonoBehaviour
         pos.x = Random.Range(MIN_POS_X, MAX_POS_X);
         pos.y = Random.Range(MIN_POS_Y, MAX_POS_Y);
 
-        //rotAngles.z = Random.Range(MIN_ANGLE, MAX_ANGLE);
+        rotAngles.z = Random.Range(MIN_ANGLE, MAX_ANGLE);
 
         this.spriteRenderer.transform.localPosition = pos;
         this.spriteRenderer.transform.localEulerAngles = rotAngles;
         this.spriteRenderer.transform.localScale = scale;
 
-        const float SHADOW_MIN_STRENGTH = 0.4f;
-        const float SHADOW_MAX_STRENGTH = 0.95f;
-        this.spriteRenderer.color = new Color(0, 0, 0, Random.Range(SHADOW_MIN_STRENGTH, SHADOW_MAX_STRENGTH));
+        this.spriteRenderer.color = new Color(0, 0, 0, Random.Range(ShadowParameters.SHADOW_MIN_STRENGTH, ShadowParameters.SHADOW_MAX_STRENGTH));
     }
 
     private void InitializeLightColors()
