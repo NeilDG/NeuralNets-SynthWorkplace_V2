@@ -13,17 +13,15 @@ public class CameraRecordingV2 : MonoBehaviour
 {
     [SerializeField] private Camera cameraWithShadows;
     [SerializeField] private Camera cameraNoShadows;
-    private const string BASE_PATH = "E:/SynthWeather Dataset 10_2/";
+    private const string BASE_PATH = ShadowParameters.BASE_PATH;
 
     public static int SAVE_EVERY_FRAME = 1;
-    // public static int REFRESH_SCENE_PER_FRAME = 5;
-    public static int REFRESH_SCENE_PER_FRAME = SAVE_EVERY_FRAME * 3000;
+    private static readonly int REFRESH_SCENE_PER_FRAME = ShadowParameters.REFRESH_SCENE_PER_FRAME;
 
     private long frames = 0;
     public static int counter = 0;
 
-    private static int MAX_IMAGES_TO_SAVE = counter + 150000;
-    private const int MAX_IMAGES_TO_SAVE_DEBUG = 10;
+    private static readonly int MAX_IMAGES_TO_SAVE = counter + ShadowParameters.MAX_IMAGES_TO_SAVE;
     private const int CAPTURE_FRAME_RATE = 30;
 
     private string currentFolderDir_WithShadows;

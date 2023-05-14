@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 public class DatasetLoader
@@ -18,6 +19,7 @@ public class DatasetLoader
     }
 
     private string[] placesDatasetFiles;
+    private string[] synShadowFiles;
 
     public class Texture2DTracker
     {
@@ -31,26 +33,33 @@ public class DatasetLoader
         }
     }
 
+    public class Sprite2DTracker
+    {
+        public int key = 0;
+        public Sprite loadedSprite = null;
+        public bool beingUsed = false;
+
+        public Sprite2DTracker(int key)
+        {
+            this.key = 0;
+        }
+    }
+
     private Dictionary<int, Texture2DTracker> loadedImages;
+    private Dictionary<int, Sprite2DTracker> loadedSprites;
 
     private const int LOADED_IMG_LIMIT = 3000;
     private int currentKey = 0;
 
     private DatasetLoader()
     {
-        this.placesDatasetFiles = Directory.GetFiles("E:/Places Dataset/", "*.jpg");
+        this.placesDatasetFiles = Directory.GetFiles("X:/Places Dataset/", "*.jpg");
 
         // List<string> istdList = new List<string>();
         // int repeats = 500;
         // for (int i = 0; i < repeats; i++)
         // {
-        //     string[] istdBaseList = Directory.GetFiles("E:/ISTD_Dataset/train/train_C/", "*.png");
-        //     istdList.AddRange(istdBaseList);
-        // }
-        //
-        // for (int i = 0; i < repeats; i++)
-        // {
-        //     string[] istdBaseList = Directory.GetFiles("E:/ISTD_Dataset/test/test_C/", "*.png");
+        //     string[] istdBaseList = Directory.GetFiles("X:/ISTD_Dataset/test/test_C/", "*.png");
         //     istdList.AddRange(istdBaseList);
         // }
         // this.placesDatasetFiles = istdList.ToArray();
@@ -59,20 +68,32 @@ public class DatasetLoader
         // int repeats = 500;
         // for (int i = 0; i < repeats; i++)
         // {
-        //     string[] baseList = Directory.GetFiles("E:/SRD_Train/shadow_free/", "*.jpg");
+        //     string[] baseList = Directory.GetFiles("X:/SRD_Train/shadow_free/", "*.jpg");
         //     srdList.AddRange(baseList);
         // }
         // this.placesDatasetFiles = srdList.ToArray();
 
+        // List<string> usrList = new List<string>();
+        // int repeats = 500;
+        // for (int i = 0; i < repeats; i++)
+        // {
+        //     string[] baseList = Directory.GetFiles("E:/USR Shadow Dataset/shadow_free/", "*.jpg");
+        //     usrList.AddRange(baseList);
+        // }
+        // this.placesDatasetFiles = usrList.ToArray();
+
         this.currentKey = CameraRecordingV2.counter % this.placesDatasetFiles.Length;
         Debug.Log("Set image ID to:" + this.currentKey);
         this.loadedImages = new Dictionary<int, Texture2DTracker>();
+        this.loadedSprites = new Dictionary<int, Sprite2DTracker>();
 
         for (int i = 0; i < LOADED_IMG_LIMIT; i++)
         {
             this.GetRandomImage();
         }
-        
+
+        this.synShadowFiles = Directory.GetFiles("E:/SynShadow/matte/", "*.png");
+
     }
     public Texture2DTracker GetRandomImage()
     {
@@ -102,6 +123,21 @@ public class DatasetLoader
 
             return this.loadedImages[key];
         }
+    }
+
+    public Sprite GetRandomSprite()
+    {
+        int key = Random.Range(0, this.synShadowFiles.Length); //randomly select image from synshadows
+        //int key = Random.Range(0, 10); //randomly select image from synshadows
+
+        //if capacity is full, unload 1 random image in dictionary
+        Resources.UnloadUnusedAssets();
+
+        string fileName = "SynShadow/" + this.synShadowFiles[key].Split("/").Last().Split(".")[0];
+        Debug.Log("Resource file to load: " +fileName);
+        Sprite loadedSprite = Resources.Load<Sprite>(fileName);
+        return loadedSprite;
+        
     }
 
     private void UnloadRandomImage()

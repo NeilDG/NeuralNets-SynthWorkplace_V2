@@ -8,8 +8,8 @@ public class CameraRigRandomizer : MonoBehaviour
     private Transform cameraRig;
 
     [SerializeField] private bool shouldRandomizeCamera = true;
-    [SerializeField] private PostProcessVolume postProcessVolume;
-    private PostProcessProfile postProcessProfile;
+    // [SerializeField] private PostProcessVolume postProcessVolume;
+    // private PostProcessProfile postProcessProfile;
 
     private Vector3 minPos;
     private Vector3 maxPos;
@@ -23,7 +23,7 @@ public class CameraRigRandomizer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        this.postProcessProfile = this.postProcessVolume.profile;
+        // this.postProcessProfile = this.postProcessVolume.profile;
         this.cameraRig = this.gameObject.transform;
         this.minPos = new Vector3(-340.0f, 40.0f, -265.0f);
         this.maxPos = new Vector3(350.0f, 80.0f, 105.0f);
@@ -68,16 +68,16 @@ public class CameraRigRandomizer : MonoBehaviour
 
         this.cameraRig.localEulerAngles = localRot;
     }
-
-    private void RandomizePostProcess()
-    {
-        ColorGrading colorGrading = this.postProcessProfile.GetSetting<ColorGrading>();
-        //colorGrading.postExposure.value = Random.Range(-0.75f, 0.75f);
-        colorGrading.saturation.value = Random.Range(0.0f, 100.0f);
-        colorGrading.contrast.value = Random.Range(0.0f, 100.0f);
-
-        this.postProcessVolume.profile = this.postProcessProfile;
-    }
+    //
+    // private void RandomizePostProcess()
+    // {
+    //     ColorGrading colorGrading = this.postProcessProfile.GetSetting<ColorGrading>();
+    //     //colorGrading.postExposure.value = Random.Range(-0.75f, 0.75f);
+    //     colorGrading.saturation.value = Random.Range(0.0f, 100.0f);
+    //     colorGrading.contrast.value = Random.Range(0.0f, 100.0f);
+    //
+    //     this.postProcessVolume.profile = this.postProcessProfile;
+    // }
 
 
 }
