@@ -20180,7 +20180,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh230086
+  m_Name: pb_Mesh142788
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -32228,6 +32228,7 @@ MonoBehaviour:
   prismRef: {fileID: 1126089744}
   sphereRef: {fileID: 19399212}
   capsuleRef: {fileID: 2133003886}
+  primitives: []
   directionalLight: {fileID: 705507994}
   MIN_POS_X: -30
   MAX_POS_X: 30

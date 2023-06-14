@@ -51,7 +51,6 @@ public class ShadowRandomizer : MonoBehaviour
     public static float RandomGaussian(float minValue = 0.0f, float maxValue = 1.0f, float mean = 0.5f)
     {
         float u, v, S;
-
         do
         {
             u = 2.0f * UnityEngine.Random.value - 1.0f;
@@ -91,31 +90,35 @@ public class ShadowRandomizer : MonoBehaviour
 
     private void InitializeLightColors()
     {
-        this.rwLightColors = new Color[6];
+        this.rwLightColors = new Color[7];
         //from http://planetpixelemporium.com/tutorialpages/light.html
-        this.rwLightColors[0].r = 255.0f/255.0f;
-        this.rwLightColors[0].g = 197.0f/255.0f;
-        this.rwLightColors[0].b = 143.0f/255.0f;
+        this.rwLightColors[0].r = 255.0f / 255.0f;
+        this.rwLightColors[0].g = 147.0f / 255.0f;
+        this.rwLightColors[0].b = 41.0f / 255.0f;
 
         this.rwLightColors[1].r = 255.0f/255.0f;
-        this.rwLightColors[1].g = 214.0f/255.0f;
-        this.rwLightColors[1].b = 170.0f/255.0f;
+        this.rwLightColors[1].g = 197.0f/255.0f;
+        this.rwLightColors[1].b = 143.0f/255.0f;
 
         this.rwLightColors[2].r = 255.0f/255.0f;
-        this.rwLightColors[2].g = 241.0f/255.0f;
-        this.rwLightColors[2].b = 224.0f/255.0f;
+        this.rwLightColors[2].g = 214.0f/255.0f;
+        this.rwLightColors[2].b = 170.0f/255.0f;
 
         this.rwLightColors[3].r = 255.0f/255.0f;
-        this.rwLightColors[3].g = 250.0f/255.0f;
-        this.rwLightColors[3].b = 244.0f/255.0f;
+        this.rwLightColors[3].g = 241.0f/255.0f;
+        this.rwLightColors[3].b = 224.0f/255.0f;
 
         this.rwLightColors[4].r = 255.0f/255.0f;
-        this.rwLightColors[4].g = 255.0f/255.0f;
-        this.rwLightColors[4].b = 251.0f/255.0f;
+        this.rwLightColors[4].g = 250.0f/255.0f;
+        this.rwLightColors[4].b = 244.0f/255.0f;
 
         this.rwLightColors[5].r = 255.0f/255.0f;
         this.rwLightColors[5].g = 255.0f/255.0f;
-        this.rwLightColors[5].b = 255.0f/255.0f;
+        this.rwLightColors[5].b = 251.0f/255.0f;
+
+        this.rwLightColors[6].r = 255.0f/255.0f;
+        this.rwLightColors[6].g = 255.0f/255.0f;
+        this.rwLightColors[6].b = 255.0f/255.0f;
 
         /*this.rwLightColors[6].r = 201.0f/255.0f;
         this.rwLightColors[6].g = 226.0f/255.0f;
@@ -238,7 +241,7 @@ public class ShadowRandomizer : MonoBehaviour
         this.directionalLight.color = this.rwLightColors[randLight];
         RenderSettings.ambientLight = Color.white * MathF.Round(Random.Range(ShadowParameters.MIN_AMBIENT_INTENSITY, ShadowParameters.MAX_AMBIENT_INTENSITY), 4);
         this.directionalLight.shadowStrength = MathF.Round(Random.Range(ShadowParameters.SHADOW_MIN_STRENGTH, ShadowParameters.SHADOW_MAX_STRENGTH), 4);
-        this.directionalLight.shadowNormalBias = Random.Range(0.4f, 2.5f);
+        // this.directionalLight.shadowNormalBias = Random.Range(0.4f, 2.5f);
 
         Debug.Log("<b> Shadow parameters: " + this.directionalLight.shadowStrength + " Ambient Intensity: " + RenderSettings.ambientLight + "</b>");
     }

@@ -53,16 +53,16 @@ public class DatasetLoader
 
     private DatasetLoader()
     {
-        this.placesDatasetFiles = Directory.GetFiles("X:/Places Dataset/", "*.jpg");
+        // this.placesDatasetFiles = Directory.GetFiles("X:/Places Dataset/", "*.jpg");
 
-        // List<string> istdList = new List<string>();
-        // int repeats = 500;
-        // for (int i = 0; i < repeats; i++)
-        // {
-        //     string[] istdBaseList = Directory.GetFiles("X:/ISTD_Dataset/test/test_C/", "*.png");
-        //     istdList.AddRange(istdBaseList);
-        // }
-        // this.placesDatasetFiles = istdList.ToArray();
+        List<string> istdList = new List<string>();
+        int repeats = 500;
+        for (int i = 0; i < repeats; i++)
+        {
+            string[] istdBaseList = Directory.GetFiles("X:/ISTD_Dataset/test/test_C/", "*.png");
+            istdList.AddRange(istdBaseList);
+        }
+        this.placesDatasetFiles = istdList.ToArray();
 
         // List<string> srdList = new List<string>();
         // int repeats = 500;
