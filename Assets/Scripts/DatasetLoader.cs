@@ -59,7 +59,7 @@ public class DatasetLoader
         int repeats = 500;
         for (int i = 0; i < repeats; i++)
         {
-            string[] istdBaseList = Directory.GetFiles("X:/ISTD_Dataset/test/test_C/", "*.png");
+            string[] istdBaseList = Directory.GetFiles("X:/ISTD_Dataset/train/train_C/", "*.png");
             istdList.AddRange(istdBaseList);
         }
         this.placesDatasetFiles = istdList.ToArray();
