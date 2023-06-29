@@ -60760,10 +60760,10 @@ MonoBehaviour:
   circleRef: {fileID: 1716721329}
   primitives: []
   cameraProfile: {fileID: 11400000, guid: ad1664e2fd8d8cf42b2e94dc386e7d22, type: 2}
-  MIN_POS_X: -1
-  MAX_POS_X: 1
-  MIN_POS_Y: -1
-  MAX_POS_Y: 1
+  MIN_POS_X: -1.2
+  MAX_POS_X: 1.2
+  MIN_POS_Y: -1.2
+  MAX_POS_Y: 1.2
   MIN_SCALE_X: 1
   MIN_SCALE_Y: 1
   MAX_SCALE_X: 1

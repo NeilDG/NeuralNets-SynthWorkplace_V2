@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class DatasetLoader
 {
@@ -20,6 +22,7 @@ public class DatasetLoader
 
     private string[] placesDatasetFiles;
     private string[] synShadowFiles;
+    private string[] synShadowSplicedFiles;
 
     public class Texture2DTracker
     {
@@ -53,16 +56,16 @@ public class DatasetLoader
 
     private DatasetLoader()
     {
-        // this.placesDatasetFiles = Directory.GetFiles("X:/Places Dataset/", "*.jpg");
+        this.placesDatasetFiles = Directory.GetFiles("X:/Places Dataset/", "*.jpg");
 
-        List<string> istdList = new List<string>();
-        int repeats = 500;
-        for (int i = 0; i < repeats; i++)
-        {
-            string[] istdBaseList = Directory.GetFiles("X:/ISTD_Dataset/train/train_C/", "*.png");
-            istdList.AddRange(istdBaseList);
-        }
-        this.placesDatasetFiles = istdList.ToArray();
+        // List<string> istdList = new List<string>();
+        // int repeats = 500;
+        // for (int i = 0; i < repeats; i++)
+        // {
+        //     string[] istdBaseList = Directory.GetFiles("X:/ISTD_Dataset/train/train_C/", "*.png");
+        //     istdList.AddRange(istdBaseList);
+        // }
+        // this.placesDatasetFiles = istdList.ToArray();
 
         // List<string> srdList = new List<string>();
         // int repeats = 500;
@@ -93,6 +96,7 @@ public class DatasetLoader
         }
 
         this.synShadowFiles = Directory.GetFiles("E:/SynShadow/matte/", "*.png");
+        this.synShadowSplicedFiles = Directory.GetFiles("E:/SynShadow/matte_spliced/", "*.png");
 
     }
     public Texture2DTracker GetRandomImage()
@@ -138,6 +142,22 @@ public class DatasetLoader
         Sprite loadedSprite = Resources.Load<Sprite>(fileName);
         return loadedSprite;
         
+    }
+
+    public Sprite GetRandomSplicedSprite()
+    {
+        int key = Random.Range(0, this.synShadowSplicedFiles.Length); //randomly select image from synshadows
+        //int key = Random.Range(0, 10); //randomly select image from synshadows
+        //if capacity is full, unload 1 random image in dictionary
+        Resources.UnloadUnusedAssets();
+
+        string fileName = "SynShadow_Spliced/" + this.synShadowSplicedFiles[key].Split("/").Last().Split(".")[0];
+        Debug.Log("Resource file to load: " + fileName);
+        Sprite loadedSprite = Resources.Load<Sprite>(fileName);
+
+        // Debug.Log("To load: " + this.synShadowSplicedFiles[key]);
+        // Sprite loadedSprite = Img2SpriteUtil.LoadNewSprite(this.synShadowSplicedFiles[key], 25.0f, SpriteMeshType.Tight);
+        return loadedSprite;
     }
 
     private void UnloadRandomImage()
