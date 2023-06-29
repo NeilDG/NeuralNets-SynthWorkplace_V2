@@ -90,7 +90,7 @@ public class SynShadowMultipleRandomizer : MonoBehaviour
 
             this.spriteInstances[i].transform.localPosition = pos;
             this.spriteInstances[i].transform.localEulerAngles = rotAngles;
-            this.spriteInstances[i].transform.localScale = Vector3.one * 0.1f;
+            this.spriteInstances[i].transform.localScale = Vector3.one * 0.5f;
             this.spriteInstances[i].color = new Color(0, 0, 0, Random.Range(ShadowParameters.SHADOW_MIN_STRENGTH, ShadowParameters.SHADOW_MAX_STRENGTH));
         }
 

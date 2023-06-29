@@ -389,7 +389,7 @@ MonoBehaviour:
   spriteInstances: []
   MIN_POS_X: -10
   MAX_POS_X: 10
-  MIN_POS_Y: 10
+  MIN_POS_Y: -10
   MAX_POS_Y: 10
 --- !u!1 &1077432050
 GameObject:
