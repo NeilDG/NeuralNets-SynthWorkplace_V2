@@ -232,6 +232,6 @@ public class ShadowSpriteRandomizer : MonoBehaviour
         ColorGrading grading = this.cameraProfile.GetSetting<ColorGrading>();
         grading.colorFilter.value = gradingColor;
 
-        Debug.Log("<b> Shadow parameters: " + shadowStrength + "</b>" + " Color grading color: " +grading.colorFilter.value);
+        // Debug.Log("<b> Shadow parameters: " + shadowStrength + "</b>" + " Color grading color: " +grading.colorFilter.value);
     }
 }
