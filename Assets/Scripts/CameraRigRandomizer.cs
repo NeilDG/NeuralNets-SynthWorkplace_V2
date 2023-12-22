@@ -65,6 +65,7 @@ public class CameraRigRandomizer : MonoBehaviour
         Vector3 localRot = this.cameraRig.localEulerAngles;
         localRot.x = Random.Range(this.minRot.x, this.maxRot.x);
         localRot.y = Random.Range(this.minRot.y, this.maxRot.y);
+        localRot.z = Random.Range(0, 180.0f);
 
         this.cameraRig.localEulerAngles = localRot;
     }

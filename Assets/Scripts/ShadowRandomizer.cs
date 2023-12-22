@@ -239,7 +239,9 @@ public class ShadowRandomizer : MonoBehaviour
 
         int randLight = Random.Range(0, this.rwLightColors.Length);
         this.directionalLight.color = this.rwLightColors[randLight];
-        RenderSettings.ambientLight = Color.white * MathF.Round(Random.Range(ShadowParameters.MIN_AMBIENT_INTENSITY, ShadowParameters.MAX_AMBIENT_INTENSITY), 4);
+        // RenderSettings.ambientLight = Color.white * MathF.Round(Random.Range(ShadowParameters.MIN_AMBIENT_INTENSITY, ShadowParameters.MAX_AMBIENT_INTENSITY), 4);
+        RenderSettings.ambientLight = this.directionalLight.color * MathF.Round(Random.Range(ShadowParameters.MIN_AMBIENT_INTENSITY, ShadowParameters.MAX_AMBIENT_INTENSITY), 4);
+
         this.directionalLight.shadowStrength = MathF.Round(Random.Range(ShadowParameters.SHADOW_MIN_STRENGTH, ShadowParameters.SHADOW_MAX_STRENGTH), 4);
         // this.directionalLight.shadowNormalBias = Random.Range(0.4f, 2.5f);
 
